@@ -1,7 +1,9 @@
 # blog-cells
 [![Node.js CI](https://github.com/rameshvarun/blog-cells/actions/workflows/node.js.yml/badge.svg)](https://github.com/rameshvarun/blog-cells/actions/workflows/node.js.yml)
 
-Turn any web page into an interactive code notebook, similar to [Jupyter](https://jupyter.org/) or [ObservableHQ](https://observablehq.com/). Just drop JS / CSS import tags onto your page start creating code cells using `<script type="text/notebook-cell"/>`. blog-cells will transform these script tags into interactive, runnable code snippets.
+Turn any web page into an interactive code notebook, similar to [Jupyter](https://jupyter.org/) or [ObservableHQ](https://observablehq.com/).
+
+Just drop JS / CSS import tags onto your page start creating code cells using `<script type="text/notebook-cell">` elements. blog-cells will transform these script tags into interactive, runnable code snippets.
 
 ```html
 <script type="text/notebook-cell">
