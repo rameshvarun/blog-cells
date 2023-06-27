@@ -11,7 +11,7 @@
   },
   "scripts": {
     "start": "concurrently --kill-others 'live-server .' 'tsc -w'",
-    "build": "tsc && cp ./src/blog-cells.css ./dist",
-    "format": "prettier --write src/*.ts src/*.css"
+    "build": "rm -rf dist/ && tsc && cp ./src/blog-cells.css ./dist",
+    "format": "prettier --write src/*.ts src/*.tsx src/*.css"
   }
 }

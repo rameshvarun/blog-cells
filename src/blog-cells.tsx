@@ -33,14 +33,12 @@ const resources: string[] = [
   "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.9/codemirror.min.js",
   "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/javascript/javascript.min.js",
 
+  // Font Awesome
   "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css",
 
   // React
   "https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.development.min.js",
   "https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.development.min.js",
-
-  // HTM
-  "https://cdnjs.cloudflare.com/ajax/libs/htm/3.1.1/htm.min.js",
 ];
 
 async function loadResource() {
@@ -61,9 +59,6 @@ declare var ReactDOM: any;
 declare var CodeMirror: any;
 
 Promise.all([domLoaded, loadResource()]).then(() => {
-  console.log("TEST");
-  const html = htm.bind(React.createElement);
-
   let worker: Worker = new Worker(WORKER_URL);
   function restartWorker() {
     if (worker) {
@@ -106,44 +101,50 @@ Promise.all([domLoaded, loadResource()]).then(() => {
     }
 
     render() {
-      return html`<div className="code-mirror-container">
-        <textarea ref=${this.editor} defaultValue=${this.props.code}></textarea>
-
-        ${this.state.output.length > 0
-          ? html`<div>
+      return (
+        <div className="code-mirror-container">
+          <textarea ref={this.editor} defaultValue={this.props.code}></textarea>
+          {this.state.output.length > 0 ? (
+            <div>
               <pre className="snippet-output">
-            ${this.state.output.map(
-                  (output, i) =>
-                    html`<div className="output-${output.type}" key=${i}>
-                      ${output.line}
-                    </div>`
-                )}
-          </pre
-              >
-            </div>`
-          : null}
+                {this.state.output.map((output, i) => (
+                  <div className="output-${output.type}" key={i}>
+                    {output.line}
+                  </div>
+                ))}
+              </pre>
+            </div>
+          ) : null}
 
-        <div
-          className="run-bar
-            run-bar-${this.state.kind === "running" ? "running" : "ready"}"
-          onClick=${() => this.run(this.codeMirror.getValue())}
-        >
-          ${this.state.kind === "ready"
-            ? html`<div><i className="fa-solid fa-play"></i> RUN</div>`
-            : null}
-          ${this.state.kind === "re-runnable"
-            ? html`<div>
+          <div
+            className={
+              "run-bar run-bar-" +
+              (this.state.kind === "running" ? "running" : "ready")
+            }
+            onClick={() => this.run(this.codeMirror.getValue())}
+          >
+            {this.state.kind === "ready" ? (
+              <div>
+                <i className="fa-solid fa-play"></i> RUN
+              </div>
+            ) : null}
+            {this.state.kind === "re-runnable" ? (
+              <div>
                 <i className="fa-solid fa-arrows-rotate"></i> RE-RUN
-              </div>`
-            : null}
-          ${this.state.kind === "running"
-            ? html`<img style=${{
-                height: "0.8em",
-                margin: "0px",
-              }} src="${`${SCRIPT_DIR}/three-dots.svg`}"></img>`
-            : null}
+              </div>
+            ) : null}
+            {this.state.kind === "running" ? (
+              <img
+                style={{
+                  height: "0.8em",
+                  margin: "0px",
+                }}
+                src={`${SCRIPT_DIR}/three-dots.svg`}
+              ></img>
+            ) : null}
+          </div>
         </div>
-      </div>`;
+      );
     }
 
     componentDidMount() {
@@ -208,6 +209,7 @@ Promise.all([domLoaded, loadResource()]).then(() => {
   const scripts = document.querySelectorAll(
     "script[type='text/notebook-cell']"
   ) as NodeListOf<HTMLScriptElement>;
+
   for (const script of scripts) {
     const code = script.innerHTML.trim();
     const autoRun = script.dataset.autorun === "true";
@@ -218,8 +220,6 @@ Promise.all([domLoaded, loadResource()]).then(() => {
     script.remove();
 
     const root = ReactDOM.createRoot(editor);
-    root.render(
-      html`<${Cell} code=${code} autoRun=${autoRun} hidden=${hidden} />`
-    );
+    root.render(<Cell code={code} autoRun={autoRun} hidden={hidden} />);
   }
 });
