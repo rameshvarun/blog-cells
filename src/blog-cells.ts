@@ -1,9 +1,9 @@
 const SCRIPT_URL = import.meta.url;
 const SCRIPT_DIR = SCRIPT_URL.substring(0, SCRIPT_URL.lastIndexOf("/"));
-const WORKER_URL = `${SCRIPT_DIR}/js-notebook-worker.js`;
+const WORKER_URL = `${SCRIPT_DIR}/blog-cells-worker.js`;
 
-function LoadCSS(href) {
-  return new Promise((resolve, reject) => {
+function LoadCSS(href: string) {
+  return new Promise<void>((resolve, reject) => {
     let link = document.createElement("link");
     link.rel = "stylesheet";
     link.href = href;
@@ -12,8 +12,8 @@ function LoadCSS(href) {
   });
 }
 
-function LoadScript(href) {
-  return new Promise((resolve, reject) => {
+function LoadScript(href: string) {
+  return new Promise<void>((resolve, reject) => {
     let script = document.createElement("script");
     script.type = "application/javascript";
     script.src = href;
@@ -22,11 +22,11 @@ function LoadScript(href) {
   });
 }
 
-const domLoaded = new Promise((resolve) => {
-  document.addEventListener("DOMContentLoaded", resolve);
+const domLoaded = new Promise<void>((resolve) => {
+  document.addEventListener("DOMContentLoaded", () => resolve());
 });
 
-const resources = [
+const resources: string[] = [
   // CodeMirror
   "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.9/codemirror.min.css",
   "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.9/theme/monokai.min.css",
@@ -55,11 +55,16 @@ async function loadResource() {
   }
 }
 
+declare var htm: any;
+declare var React: any;
+declare var ReactDOM: any;
+declare var CodeMirror: any;
+
 Promise.all([domLoaded, loadResource()]).then(() => {
   console.log("TEST");
   const html = htm.bind(React.createElement);
 
-  let worker = null;
+  let worker: Worker = new Worker(WORKER_URL);
   function restartWorker() {
     if (worker) {
       console.log("Terminating existing worker...");
@@ -74,11 +79,14 @@ Promise.all([domLoaded, loadResource()]).then(() => {
     return requestID++;
   }
 
-  const editors = [];
+  const editors: any[] = [];
 
   const events = new EventTarget();
 
   class Cell extends React.Component {
+
+    codeMirror: any;
+
     constructor(props) {
       super(props);
       this.state = { kind: "ready", output: [] };
@@ -168,7 +176,7 @@ Promise.all([domLoaded, loadResource()]).then(() => {
         requestID: requestID,
       });
 
-      const minimumWait = new Promise((resolve, reject) => {
+      const minimumWait = new Promise<void>((resolve, reject) => {
         setTimeout(() => resolve(), 500);
       });
 
@@ -199,7 +207,7 @@ Promise.all([domLoaded, loadResource()]).then(() => {
 
   const scripts = document.querySelectorAll(
     "script[type='text/notebook-cell']"
-  );
+  ) as NodeListOf<HTMLScriptElement>;
   for (const script of scripts) {
     const code = script.innerHTML.trim();
     const autoRun = script.dataset.autorun === "true";

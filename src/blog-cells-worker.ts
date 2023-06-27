@@ -1,6 +1,6 @@
-const AsyncFunction = (async (x) => x).constructor;
-
 globalThis.cellConsole = {};
+declare var cellConsole: any;
+
 cellConsole.__proto__ = console;
 
 let EXECUTION_ID = 0;
@@ -36,6 +36,9 @@ function formatArgs(args) {
 }
 
 class Executor {
+  ready: Promise<void>;
+  module: any;
+  
   constructor() {
     this.ready = Promise.resolve();
 
@@ -44,7 +47,7 @@ class Executor {
     globalThis.module = this.module = {};
   }
 
-  run(code, output = () => {}) {
+  run(code, output: (logType: string, logLine: string) => void = (type, line) => {}) {
     const done = this.ready
       .then(async () => {
         Object.assign(cellConsole, {

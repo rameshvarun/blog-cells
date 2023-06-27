@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+        "strictNullChecks": true,
+        "module": "es2020",
+        "target": "es2020",
+        "jsx": "react",
+        "sourceMap": true,
+        "allowJs": true,
+        "outDir": "./dist",
+    }
+}
