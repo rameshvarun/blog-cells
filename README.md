@@ -2,7 +2,7 @@
 [![Node.js CI](https://github.com/rameshvarun/blog-cells/actions/workflows/node.js.yml/badge.svg)](https://github.com/rameshvarun/blog-cells/actions/workflows/node.js.yml)
 
 <a href="https://rameshvarun.github.io/blog-cells/">
-<p align="center"><img width="300px" src="./screenshot.png"></img></p>
+<p align="center"><img width="400px" src="./screenshot.png"></img></p>
 <p align="center">[VIEW DEMO]</p>
 </a>
 
