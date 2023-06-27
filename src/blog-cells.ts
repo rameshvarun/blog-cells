@@ -140,6 +140,7 @@ Promise.all([domLoaded, loadResource()]).then(() => {
           ${this.state.kind === "running"
             ? html`<img style=${{
                 height: "0.8em",
+                margin: "0px",
               }} src="${`${SCRIPT_DIR}/three-dots.svg`}"></img>`
             : null}
         </div>

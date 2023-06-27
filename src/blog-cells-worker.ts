@@ -4,11 +4,11 @@ declare var cellConsole: any;
 cellConsole.__proto__ = console;
 
 let EXECUTION_ID = 0;
-function executionID() {
+function executionID(): number {
   return EXECUTION_ID++;
 }
 
-function formatArg(arg) {
+function formatArg(arg: any) {
   if (arg === undefined) return "undefined";
   else if (arg === null) return null;
   else if (Array.isArray(arg)) {
