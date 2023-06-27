@@ -6,7 +6,7 @@
 <p align="center">[VIEW DEMO]</p>
 </a>
 
-Turn any web page into an interactive code notebook, similar to [Jupyter](https://jupyter.org/) or [ObservableHQ](https://observablehq.com/).
+Add interactive code cells to any webpage, similar to [Jupyter](https://jupyter.org/) or [ObservableHQ](https://observablehq.com/). Works with static site generators like Jekyll and Hugo.
 
 Just drop JS / CSS import tags onto your page start creating code cells using `<script type="text/notebook-cell">` elements. blog-cells will transform these script tags into interactive, runnable code snippets.
 
