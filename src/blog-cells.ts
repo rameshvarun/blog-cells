@@ -84,7 +84,6 @@ Promise.all([domLoaded, loadResource()]).then(() => {
   const events = new EventTarget();
 
   class Cell extends React.Component {
-
     codeMirror: any;
 
     constructor(props) {

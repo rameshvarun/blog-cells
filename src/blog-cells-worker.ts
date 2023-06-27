@@ -4,29 +4,37 @@ declare var cellConsole: any;
 cellConsole.__proto__ = console;
 
 let EXECUTION_ID = 0;
-function executionID(): number {
+function generateExecutionID(): number {
   return EXECUTION_ID++;
 }
 
-function formatArg(arg: any) {
-  if (arg === undefined) return "undefined";
-  else if (arg === null) return null;
-  else if (Array.isArray(arg)) {
-    return "[" + arg.map(formatArg).join(",") + "]";
-  } else if (typeof arg === "string") {
-    return `"${arg}"`;
-  } else if (typeof arg === "object") {
-    if (arg.toString === {}.toString) {
-      return JSON.stringify(arg);
+importScripts("https://unpkg.com/@babel/standalone/babel.min.js");
+declare var Babel: any;
+
+/** Format an argument for printing to the output console. */
+function formatArg(arg: any): string {
+  try {
+    if (arg === undefined) return "undefined";
+    else if (arg === null) return "null";
+    else if (Array.isArray(arg)) {
+      return "[" + arg.map(formatArg).join(", ") + "]";
+    } else if (typeof arg === "string") {
+      return `"${arg}"`;
+    } else if (typeof arg === "object") {
+      if (arg.toString === {}.toString) {
+        return JSON.stringify(arg);
+      } else {
+        return arg.toString();
+      }
     } else {
-      return arg.toString();
+      return String(arg);
     }
-  } else {
-    return String(arg);
+  } catch (e) {
+    return "<FORMAT-ERROR>";
   }
 }
 
-function formatArgs(args) {
+function formatArgs(args: any[]): string {
   return args
     .map((arg) => {
       if (typeof arg === "string") return arg;
@@ -38,16 +46,44 @@ function formatArgs(args) {
 class Executor {
   ready: Promise<void>;
   module: any;
-  
+
   constructor() {
     this.ready = Promise.resolve();
 
     // The current module containing all the exported
     // values of the cells.
-    globalThis.module = this.module = {};
+    this.module = {};
+    globalThis.module = this.module;
+
+    Babel.registerPlugin("prefixer", ({ types }) => {
+      return {
+        visitor: {
+          ReferencedIdentifier: (path, state) => {
+            // Skip if this varialbe has been bound.
+            const name = path.node.name;
+            if (path.scope.hasBinding(name)) return;
+
+            // Skip if this variable is not defined on the module.
+            if (!(name in this.module)) return;
+
+            // Replace the identifier with a lookup.
+            path.replaceWith(
+              types.memberExpression(
+                types.identifier("$"),
+                types.identifier(name),
+                false
+              )
+            );
+          },
+        },
+      };
+    });
   }
 
-  run(code, output: (logType: string, logLine: string) => void = (type, line) => {}) {
+  run(
+    code,
+    output: (logType: string, logLine: string) => void = (type, line) => {}
+  ) {
     const done = this.ready
       .then(async () => {
         Object.assign(cellConsole, {
@@ -74,10 +110,15 @@ class Executor {
           },
         });
 
-        const module = `// ExecutionID: ${executionID()};
+        const transpiled = Babel.transform(code, {
+          plugins: ["prefixer"],
+        });
+
+        const module = `// ExecutionID: ${generateExecutionID()};
 const $ = globalThis.module;
 const console = globalThis.cellConsole;
-${code}`;
+${transpiled.code}`;
+
         console.log(module);
 
         const dataURL = "data:text/javascript;base64," + btoa(module);

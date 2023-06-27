@@ -3,40 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BlogCode Demo</title>
+    <title>blog-cells Demo</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" />
     <link rel="stylesheet" href="https://unpkg.com/sakura.css/css/sakura.css" type="text/css">
 
 </head>
 <body>
-<p><h1>blog-cells demo</h1></p>
-<p>blog-cells can turn any web page into a interactive code notebook, similar to
-Jupyter notbooks, but powered by JavaScript and running entirely in the browser.</p>
+<p>
+<h1>blog-cells demo</h1>
+<hr/>
+</p>
+
+<p>blog-cells can turn any web page into an interactive code notebook, similar to
+Jupyter notebooks, but powered by JavaScript and running entirely in the browser.</p>
+<p>There's no server-side component, so you can share your notebooks on static site
+hosts like GitHub pages.</p>
+<p>You create your program in cells, just like the one below.</p>
 
 <p>
-<script type="text/notebook-cell">
+<script type="text/notebook-cell" data-autorun="true">
 console.log("Hello World!");
 </script>
 </p>
 
+<p>Cells can run either automatically on page load, or can wait until the reader
+explicitly runs them.</p>
+
 <p>
-<script type="text/notebook-cell" data-autorun="true">
-console.log("Hello World, but automatically!");
+<script type="text/notebook-cell">
+console.log("Hello World, but not automatic.");
 </script>
 </p>
+
+<p>Each cell is a module. You can export functions and values from one cell to be used in others.</p>
 
 <p>
 <script type="text/notebook-cell" data-autorun="true">
 export function hello() {
-    console.log("Hello World, from an exported function!");
+  console.log("Hello World, from an exported function!");
 }
+
+export const test = 3;
 </script>
 </p>
 
+<p>The functions are automatically imported and available as globals in other cells.</p>
+
 <p>
 <script type="text/notebook-cell" data-autorun="true">
-$.hello();
+hello();
+console.log(test);
 </script>
 </p>
 
