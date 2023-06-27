@@ -10,7 +10,7 @@
   },
   "scripts": {
     "start": "concurrently --kill-others 'live-server .' 'tsc -w'",
-    "build": "rm -rf dist/ && tsc && cp ./src/blog-cells.css ./dist",
+    "build": "rm -rf dist/ && tsc && cp ./src/blog-cells.css ./src/three-dots.svg ./dist",
     "format": "prettier --write src/*.ts src/*.tsx src/*.css"
   }
 }

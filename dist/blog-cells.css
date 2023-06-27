@@ -1,0 +1,104 @@
+.CodeMirror {
+  font-family: "Roboto Mono", monospace;
+  font-weight: 400;
+  font-size: 90%;
+  line-height: 22px;
+  border: none;
+  height: auto;
+  color-scheme: dark;
+}
+.cm-s-monokai.CodeMirror {
+  background: #333333;
+}
+.cm-s-monokai span.cm-keyword {
+  font-weight: bold;
+}
+.code-mirror-container {
+  box-shadow: 0 0 5px 1px #000000c6;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+  background: black;
+
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
+.CodeMirror pre.CodeMirror-line {
+  padding: 0px 8px;
+}
+.CodeMirror-lines {
+  padding: 8px 0px;
+}
+.CodeMirror-linenumbers {
+}
+.CodeMirror-linenumber {
+  padding-right: 8px;
+  padding-left: 10px;
+}
+.run-button {
+  background-color: #044a10;
+  color: #6cd97e;
+  font-family: "Roboto Mono", monospace;
+  font-weight: 400;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+  height: 40px;
+}
+
+.snippet-output {
+  border-style: none;
+  border-radius: 0px;
+  margin: 0px;
+  color: white;
+  background-color: black;
+  max-height: 300px;
+  padding: 10px 20px;
+  color-scheme: dark;
+}
+.run-bar {
+  text-align: center;
+  transition: color 0.2s ease 0s, background-color 0.2s ease 0s;
+
+  display: flex;
+  flex-direction: column;
+
+  justify-content: center;
+
+  font-family: "Roboto Mono", monospace;
+  font-weight: 400;
+  font-size: 16px;
+  height: 2.5em;
+}
+.run-bar-ready {
+  background-color: #044a10;
+  color: #6cd97e;
+  cursor: pointer;
+}
+.run-bar-ready:hover {
+  color: white;
+  background-color: rgb(0, 145, 24);
+}
+.run-bar-running {
+  background-color: #3477eb;
+  color: #6cd97e;
+}
+
+.output-log {
+  color: white;
+}
+.output-error {
+  color: red;
+}
+.output-warn {
+  color: yellow;
+}
+
+.action-bar-button {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+.simplebar-scrollbar::before {
+  background-color: white;
+}
