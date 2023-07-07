@@ -207,11 +207,11 @@ Promise.all([domLoaded, loadResource()]).then(() => {
   }
 
   const scripts = document.querySelectorAll(
-    "script[type='text/notebook-cell']"
+    "script[type='text/notebook-cell'], pre.notebook-cell"
   ) as NodeListOf<HTMLScriptElement>;
 
   for (const script of scripts) {
-    const code = script.innerHTML.trim();
+    const code = script.textContent?.trim() || "";
     const autoRun = script.dataset.autorun === "true";
     const hidden = script.dataset.hidden === "true";
 
