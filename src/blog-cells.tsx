@@ -1,8 +1,11 @@
+// @ts-ignore
+import WORKER_SRC from "!raw-loader!ts-loader!./blog-cells-worker.ts";
+
+import * as React from "react";
+import * as ReactDOM from "react-dom/client";
+
 const SCRIPT_URL = import.meta.url;
 const SCRIPT_DIR = SCRIPT_URL.substring(0, SCRIPT_URL.lastIndexOf("/"));
-
-// @ts-ignore
-import WORKER_SRC from '!raw-loader!ts-loader!./blog-cells-worker.ts'
 
 function LoadCSS(href: string) {
   return new Promise<void>((resolve, reject) => {
@@ -37,10 +40,6 @@ const resources: string[] = [
 
   // Font Awesome
   "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css",
-
-  // React
-  "https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.development.min.js",
-  "https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.development.min.js",
 ];
 
 async function loadResource() {
@@ -55,12 +54,10 @@ async function loadResource() {
   }
 }
 
-declare var React: any;
-declare var ReactDOM: any;
 declare var CodeMirror: any;
 
 Promise.all([domLoaded, loadResource()]).then(() => {
-  const blob = new Blob([WORKER_SRC], {type: 'application/javascript'});
+  const blob = new Blob([WORKER_SRC], { type: "application/javascript" });
 
   let worker: Worker = new Worker(URL.createObjectURL(blob));
   function restartWorker() {
@@ -80,8 +77,19 @@ Promise.all([domLoaded, loadResource()]).then(() => {
 
   const events = new EventTarget();
 
-  class Cell extends React.Component {
+  class Cell extends React.Component<
+    {
+      code: string;
+      autoRun: boolean;
+      hideable: boolean;
+    },
+    any
+  > {
     codeMirror: any;
+    editor: any;
+
+    running: boolean;
+    mounted: boolean;
 
     constructor(props) {
       super(props);
@@ -92,6 +100,14 @@ Promise.all([domLoaded, loadResource()]).then(() => {
 
       this.running = false;
       this.mounted = false;
+
+      if (props.hideable) {
+        // @ts-ignore
+        this.state.hidden = true;
+      } else {
+        // @ts-ignore
+        this.state.hidden = false;
+      }
 
       if (props.autoRun) {
         this.run(props.code);
@@ -105,45 +121,68 @@ Promise.all([domLoaded, loadResource()]).then(() => {
     render() {
       return (
         <div className="code-mirror-container">
-          <textarea ref={this.editor} defaultValue={this.props.code}></textarea>
-          {this.state.output.length > 0 ? (
-            <div>
-              <pre className="snippet-output">
-                {this.state.output.map((output, i) => (
-                  <div className="output-${output.type}" key={i}>
-                    {output.line}
-                  </div>
-                ))}
-              </pre>
+          {this.props.hideable ? (
+            <div
+              className="cell-header"
+              onClick={() => {
+                this.setState({ hidden: !this.state.hidden });
+              }}
+            >
+              <div>{this.state.hidden ? "SHOW HIDDEN CELL" : "HIDE CELL"}</div>
             </div>
           ) : null}
 
           <div
-            className={
-              "run-bar run-bar-" +
-              (this.state.kind === "running" ? "running" : "ready")
-            }
-            onClick={() => this.run(this.codeMirror.getValue())}
+            style={{
+              height: this.state.hidden ? "0px" : "auto",
+              overflowY: "hidden",
+              opacity: this.state.hidden ? "0" : "1",
+              transition: "opacity 0.2s ease 0s",
+            }}
           >
-            {this.state.kind === "ready" ? (
+            <textarea
+              ref={this.editor}
+              defaultValue={this.props.code}
+            ></textarea>
+            {this.state.output.length > 0 ? (
               <div>
-                <i className="fa-solid fa-play"></i> RUN
+                <pre className="snippet-output">
+                  {this.state.output.map((output, i) => (
+                    <div className="output-${output.type}" key={i}>
+                      {output.line}
+                    </div>
+                  ))}
+                </pre>
               </div>
             ) : null}
-            {this.state.kind === "re-runnable" ? (
-              <div>
-                <i className="fa-solid fa-arrows-rotate"></i> RE-RUN
-              </div>
-            ) : null}
-            {this.state.kind === "running" ? (
-              <img
-                style={{
-                  height: "0.8em",
-                  margin: "0px",
-                }}
-                src={`${SCRIPT_DIR}/three-dots.svg`}
-              ></img>
-            ) : null}
+
+            <div
+              className={
+                "run-bar run-bar-" +
+                (this.state.kind === "running" ? "running" : "ready")
+              }
+              onClick={() => this.run(this.codeMirror.getValue())}
+            >
+              {this.state.kind === "ready" ? (
+                <div>
+                  <i className="fa-solid fa-play"></i> RUN
+                </div>
+              ) : null}
+              {this.state.kind === "re-runnable" ? (
+                <div>
+                  <i className="fa-solid fa-arrows-rotate"></i> RE-RUN
+                </div>
+              ) : null}
+              {this.state.kind === "running" ? (
+                <img
+                  style={{
+                    height: "0.8em",
+                    margin: "0px",
+                  }}
+                  src={`${SCRIPT_DIR}/three-dots.svg`}
+                ></img>
+              ) : null}
+            </div>
           </div>
         </div>
       );
@@ -168,7 +207,10 @@ Promise.all([domLoaded, loadResource()]).then(() => {
       if (this.mounted) {
         this.setState({ kind: "running", output: [] });
       } else {
-        this.state = { kind: "running", output: [] };
+        // @ts-ignore
+        this.state.kind = "running";
+        // @ts-ignore
+        this.state.output = [];
       }
 
       const requestID = getRequestID();
@@ -222,6 +264,6 @@ Promise.all([domLoaded, loadResource()]).then(() => {
     script.remove();
 
     const root = ReactDOM.createRoot(editor);
-    root.render(<Cell code={code} autoRun={autoRun} hidden={hidden} />);
+    root.render(<Cell code={code} autoRun={autoRun} hideable={hidden} />);
   }
 });

@@ -3,6 +3,8 @@
   "version": "0.0.1",
   "description": "A tool for turning blog posts into interactive code notebooks.",
   "devDependencies": {
+    "@types/react": "^18.2.20",
+    "@types/react-dom": "^18.2.7",
     "concurrently": "^8.2.0",
     "copy-webpack-plugin": "^11.0.0",
     "live-server": "^1.2.2",
@@ -16,6 +18,11 @@
   "scripts": {
     "start": "live-server .",
     "build": "rm -rf dist && webpack --mode production",
-    "format": "prettier --write src/*.ts src/*.tsx src/*.css"
+    "format": "prettier --write src/*.ts src/*.tsx src/*.css",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   }
 }

@@ -1,18 +1,48 @@
 .CodeMirror {
   font-family: "Roboto Mono", monospace;
   font-weight: 400;
-  font-size: 90%;
-  line-height: 22px;
+
   border: none;
   height: auto;
   color-scheme: dark;
+
+  font-size: 14px;
+  line-height: 1.45em;
 }
+
+.cell-header {
+  text-align: center;
+
+  color: #6cd97e;
+  cursor: pointer;
+
+  background-color: #044a10;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  font-family: "Roboto Mono", monospace;
+  font-weight: 400;
+
+  font-size: 16px;
+  height: 2.5em;
+
+  transition: color 0.2s ease 0s, background-color 0.2s ease 0s;
+}
+.cell-header:hover {
+  color: white;
+  background-color: rgb(0, 145, 24);
+}
+
 .cm-s-monokai.CodeMirror {
   background: #333333;
 }
 .cm-s-monokai span.cm-keyword {
   font-weight: bold;
 }
+
 .code-mirror-container {
   box-shadow: 0 0 5px 1px #000000c6;
   border-radius: 4px;
@@ -23,30 +53,23 @@
   margin-top: 25px;
   margin-bottom: 25px;
 }
+
 .CodeMirror pre.CodeMirror-line {
   padding: 0px 8px;
 }
 .CodeMirror-lines {
   padding: 8px 0px;
 }
-.CodeMirror-linenumbers {
-}
+
 .CodeMirror-linenumber {
   padding-right: 8px;
   padding-left: 10px;
 }
-.run-button {
-  background-color: #044a10;
-  color: #6cd97e;
-  font-family: "Roboto Mono", monospace;
-  font-weight: 400;
-  font-size: 16px;
-  cursor: pointer;
-  text-align: center;
-  height: 40px;
-}
 
 .snippet-output {
+  font-size: 14px;
+  line-height: 1.45em;
+
   border-style: none;
   border-radius: 0px;
   margin: 0px;
