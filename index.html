@@ -48,12 +48,12 @@ export const test = 3;
 </script>
 </p>
 
-<p>The functions are automatically imported and available as globals in other cells.</p>
+<p>The exported values are available in other cells using the <code>$</code> global.</p>
 
 <p>
 <script type="text/notebook-cell" data-autorun="true">
-hello();
-console.log(test);
+$.hello();
+console.log($.test);
 </script>
 </p>
 

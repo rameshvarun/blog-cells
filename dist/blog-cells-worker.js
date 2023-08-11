@@ -4,7 +4,6 @@ let EXECUTION_ID = 0;
 function generateExecutionID() {
     return EXECUTION_ID++;
 }
-importScripts("https://unpkg.com/@babel/standalone/babel.min.js");
 /** Format an argument for printing to the output console. */
 function formatArg(arg) {
     try {
@@ -51,23 +50,6 @@ class Executor {
         // values of the cells.
         this.module = {};
         globalThis.module = this.module;
-        Babel.registerPlugin("prefixer", ({ types }) => {
-            return {
-                visitor: {
-                    ReferencedIdentifier: (path, state) => {
-                        // Skip if this varialbe has been bound.
-                        const name = path.node.name;
-                        if (path.scope.hasBinding(name))
-                            return;
-                        // Skip if this variable is not defined on the module.
-                        if (!(name in this.module))
-                            return;
-                        // Replace the identifier with a lookup.
-                        path.replaceWith(types.memberExpression(types.identifier("$"), types.identifier(name), false));
-                    },
-                },
-            };
-        });
     }
     run(code, output = (type, line) => { }) {
         const done = this.ready
@@ -94,13 +76,10 @@ class Executor {
                     }
                 },
             });
-            const transpiled = Babel.transform(code, {
-                plugins: ["prefixer"],
-            });
             const module = `// ExecutionID: ${generateExecutionID()};
 const $ = globalThis.module;
 const console = globalThis.cellConsole;
-${transpiled.code}`;
+${code}`;
             console.log(module);
             const dataURL = "data:text/javascript;base64," + btoa(module);
             const exports = await import(dataURL);
