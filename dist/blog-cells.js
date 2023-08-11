@@ -604,7 +604,7 @@ Promise.all([domLoaded, loadResource()]).then(() => {
                     } },
                     react.createElement("textarea", { ref: this.editor, defaultValue: this.props.code }),
                     this.state.output.length > 0 ? (react.createElement("div", null,
-                        react.createElement("pre", { className: "snippet-output" }, this.state.output.map((output, i) => (react.createElement("div", { className: "output-${output.type}", key: i }, output.line)))))) : null,
+                        react.createElement("pre", { className: "snippet-output" }, this.state.output.map((output, i) => (react.createElement("div", { className: "output-" + output.type, key: i }, output.line)))))) : null,
                     react.createElement("div", { className: "run-bar run-bar-" +
                             (this.state.kind === "running" ? "running" : "ready"), onClick: () => this.run(this.codeMirror.getValue()) },
                         this.state.kind === "ready" ? (react.createElement("div", null,

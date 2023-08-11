@@ -148,7 +148,7 @@ Promise.all([domLoaded, loadResource()]).then(() => {
               <div>
                 <pre className="snippet-output">
                   {this.state.output.map((output, i) => (
-                    <div className="output-${output.type}" key={i}>
+                    <div className={"output-" + output.type} key={i}>
                       {output.line}
                     </div>
                   ))}

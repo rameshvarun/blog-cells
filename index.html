@@ -89,6 +89,19 @@ const data = await response.json();
 console.log(data);
 </script>
 
+<script type="text/notebook-cell" data-autorun="true">
+console.log("Regular output.")
+console.error("Error output.")
+console.warn("Warning output.")
+</script>
+
+<script type="text/notebook-cell" data-autorun="true">
+function test() {
+  throw new Error("Test failed");
+}
+test();
+</script>
+
 <script type="module" src="dist/blog-cells.js"></script>
 <link rel="stylesheet" href="dist/blog-cells.css" />
 </body>
