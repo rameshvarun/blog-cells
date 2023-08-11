@@ -1,6 +1,8 @@
 const SCRIPT_URL = import.meta.url;
 const SCRIPT_DIR = SCRIPT_URL.substring(0, SCRIPT_URL.lastIndexOf("/"));
-const WORKER_URL = `${SCRIPT_DIR}/blog-cells-worker.js`;
+
+// @ts-ignore
+import WORKER_SRC from '!raw-loader!ts-loader!./blog-cells-worker.ts'
 
 function LoadCSS(href: string) {
   return new Promise<void>((resolve, reject) => {
@@ -53,21 +55,21 @@ async function loadResource() {
   }
 }
 
-declare var htm: any;
 declare var React: any;
 declare var ReactDOM: any;
 declare var CodeMirror: any;
 
 Promise.all([domLoaded, loadResource()]).then(() => {
-  let worker: Worker = new Worker(WORKER_URL);
+  const blob = new Blob([WORKER_SRC], {type: 'application/javascript'});
+
+  let worker: Worker = new Worker(URL.createObjectURL(blob));
   function restartWorker() {
     if (worker) {
       console.log("Terminating existing worker...");
       worker.terminate();
     }
-    worker = new Worker(WORKER_URL);
+    worker = new Worker(URL.createObjectURL(blob));
   }
-  restartWorker();
 
   let requestID = 0;
   function getRequestID() {

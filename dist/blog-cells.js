@@ -1,6 +1,14 @@
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+var __webpack_exports__ = {};
+
+;// CONCATENATED MODULE: ./node_modules/raw-loader/dist/cjs.js!./node_modules/ts-loader/index.js!./src/blog-cells-worker.ts
+/* harmony default export */ const blog_cells_worker = ("globalThis.cellConsole = {};\ncellConsole.__proto__ = console;\nlet EXECUTION_ID = 0;\nfunction generateExecutionID() {\n    return EXECUTION_ID++;\n}\n/** Format an argument for printing to the output console. */\nfunction formatArg(arg) {\n    try {\n        if (arg === undefined)\n            return \"undefined\";\n        else if (arg === null)\n            return \"null\";\n        else if (Array.isArray(arg)) {\n            return \"[\" + arg.map(formatArg).join(\", \") + \"]\";\n        }\n        else if (typeof arg === \"string\") {\n            return `\"${arg}\"`;\n        }\n        else if (typeof arg === \"object\") {\n            if (arg.toString === {}.toString) {\n                return JSON.stringify(arg);\n            }\n            else {\n                return arg.toString();\n            }\n        }\n        else {\n            return String(arg);\n        }\n    }\n    catch (e) {\n        return \"<FORMAT-ERROR>\";\n    }\n}\nfunction formatArgs(args) {\n    return args\n        .map((arg) => {\n        if (typeof arg === \"string\")\n            return arg;\n        else\n            return formatArg(arg);\n    })\n        .join(\" \");\n}\nclass Executor {\n    constructor() {\n        this.ready = Promise.resolve();\n        // The current module containing all the exported\n        // values of the cells.\n        this.module = {};\n        globalThis.module = this.module;\n    }\n    run(code, output = (type, line) => { }) {\n        const done = this.ready\n            .then(async () => {\n            Object.assign(cellConsole, {\n                log: (...args) => {\n                    output(\"log\", formatArgs(args));\n                },\n                info: (...args) => {\n                    output(\"log\", formatArgs(args));\n                },\n                error: (...args) => {\n                    output(\"error\", formatArgs(args));\n                },\n                warn: (...args) => {\n                    output(\"warn\", formatArgs(args));\n                },\n                assert: (condition, ...args) => {\n                    if (!condition) {\n                        const message = args.length > 0\n                            ? \"Assertion Failed: \" + formatArgs(args)\n                            : \"Assertion Failed\";\n                        output(\"error\", message);\n                    }\n                },\n            });\n            const module = `// ExecutionID: ${generateExecutionID()};\nconst $ = globalThis.module;\nconst console = globalThis.cellConsole;\n${code}`;\n            console.log(module);\n            const dataURL = \"data:text/javascript;base64,\" + btoa(module);\n            const exports = await import(dataURL);\n            // Write exports onto the module object.\n            Object.assign(this.module, exports);\n            for (const prop of Object.getOwnPropertyNames(cellConsole)) {\n                delete cellConsole[prop];\n            }\n        })\n            .catch((error) => {\n            output(\"error\", error.toString());\n        });\n        this.ready = done;\n        return done;\n    }\n}\nconst executor = new Executor();\nself.onmessage = async (e) => {\n    console.log(\"Worker received message: %o\", e);\n    const requestID = e.data.requestID;\n    if (e.data.kind === \"run-code\") {\n        self.postMessage({\n            kind: \"run-code-waiting\",\n            requestID: requestID,\n        });\n        await executor.run(e.data.code, (type, output) => {\n            self.postMessage({\n                kind: \"run-code-output\",\n                requestID: requestID,\n                output: {\n                    type: type,\n                    line: output,\n                },\n            });\n        });\n        self.postMessage({\n            kind: \"run-code-done\",\n            requestID: requestID,\n        });\n    }\n};\n");
+;// CONCATENATED MODULE: ./src/blog-cells.tsx
 const SCRIPT_URL = import.meta.url;
 const SCRIPT_DIR = SCRIPT_URL.substring(0, SCRIPT_URL.lastIndexOf("/"));
-const WORKER_URL = `${SCRIPT_DIR}/blog-cells-worker.js`;
+// @ts-ignore
+
 function LoadCSS(href) {
     return new Promise((resolve, reject) => {
         let link = document.createElement("link");
@@ -48,15 +56,15 @@ async function loadResource() {
     }
 }
 Promise.all([domLoaded, loadResource()]).then(() => {
-    let worker = new Worker(WORKER_URL);
+    const blob = new Blob([blog_cells_worker], { type: 'application/javascript' });
+    let worker = new Worker(URL.createObjectURL(blob));
     function restartWorker() {
         if (worker) {
             console.log("Terminating existing worker...");
             worker.terminate();
         }
-        worker = new Worker(WORKER_URL);
+        worker = new Worker(URL.createObjectURL(blob));
     }
-    restartWorker();
     let requestID = 0;
     function getRequestID() {
         return requestID++;
@@ -162,5 +170,7 @@ Promise.all([domLoaded, loadResource()]).then(() => {
         root.render(React.createElement(Cell, { code: code, autoRun: autoRun, hidden: hidden }));
     }
 });
-export {};
+
+/******/ })()
+;
 //# sourceMappingURL=blog-cells.js.map
