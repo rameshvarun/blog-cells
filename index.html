@@ -15,6 +15,8 @@
 <hr/>
 </p>
 
+<p><a href="https://github.com/rameshvarun/blog-cells/blob/main/index.html">[View Page Source]</a></p>
+
 <p><a href="https://github.com/rameshvarun/blog-cells">blog-cells</a> can turn any web page into an interactive code notebook, similar to
 Jupyter notebooks, but powered by JavaScript and running entirely in the browser.</p>
 <p>There's no server-side component, so you can share your notebooks on static site
@@ -75,7 +77,7 @@ function wait(time) {
   });
 }
 
-for (let i = 0; i < 20; ++i) {
+for (let i = 0; i < 10; ++i) {
   await wait(200);
   console.log("Hello World!");
 }
@@ -89,20 +91,23 @@ const data = await response.json();
 console.log(data);
 </script>
 
+<p>You can import third-party ES modules.</p>
+
+<script type="text/notebook-cell" data-autorun="true">
+import sum from "https://cdn.jsdelivr.net/npm/lodash-es@4.17.21/sum.js";
+console.log(sum([1, 2, 3]));
+</script>
+
+<p>You can use several different console functions.</p>
+
 <script type="text/notebook-cell" data-autorun="true">
 console.log("Regular output.")
 console.error("Error output.")
 console.warn("Warning output.")
+console.assert(3 == 4, "3 does not equal 4.");
 </script>
 
-<script type="text/notebook-cell" data-autorun="true">
-function test() {
-  throw new Error("Test failed");
-}
-test();
-</script>
-
-<script type="module" src="dist/blog-cells.js"></script>
 <link rel="stylesheet" href="dist/blog-cells.css" />
+<script type="module" src="dist/blog-cells.js"></script>
 </body>
 </html>
