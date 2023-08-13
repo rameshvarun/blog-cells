@@ -20,6 +20,8 @@ console.log("Hello World!");
 <script type="module" src="https://cdn.jsdelivr.net/gh/rameshvarun/blog-cells@0.3.0/dist/blog-cells.js"></script>
 ```
 
+<a href="https://glitch.com/edit/#!/remix/blog-cells-example"><img src="https://cdn.glitch.com/2703baf2-b643-4da7-ab91-7ee2a2d00b5b%2Fremix-button-v2.svg" alt="Remix on Glitch" /></a>
+
 ## Alternatives
 - https://starboard.gg/
 - https://observablehq.com/
