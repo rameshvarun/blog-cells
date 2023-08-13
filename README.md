@@ -10,6 +10,8 @@ Add interactive code cells to any webpage, similar to [Jupyter](https://jupyter.
 
 Just drop JS / CSS import tags onto your page start creating code cells using `<script type="text/notebook-cell">` elements. blog-cells will transform these script tags into interactive, runnable code snippets.
 
+Try it on [CodePen](https://codepen.io/varunramesh/pen/WNYVNQQ) or [JSFiddle](https://jsfiddle.net/varunramesh/o217xpc5/8/).
+
 ```html
 <script type="text/notebook-cell">
 console.log("Hello World!");
@@ -19,8 +21,6 @@ console.log("Hello World!");
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rameshvarun/blog-cells@0.3.0/dist/blog-cells.css" />
 <script type="module" src="https://cdn.jsdelivr.net/gh/rameshvarun/blog-cells@0.3.0/dist/blog-cells.js"></script>
 ```
-
-<a href="https://glitch.com/edit/#!/remix/blog-cells-example"><img src="https://cdn.glitch.com/2703baf2-b643-4da7-ab91-7ee2a2d00b5b%2Fremix-button-v2.svg" alt="Remix on Glitch" /></a>
 
 ## Alternatives
 - https://starboard.gg/
