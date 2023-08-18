@@ -1,7 +1,12 @@
 {
   "name": "blog-cells",
-  "version": "0.3.0",
+  "version": "0.4.1",
   "description": "A tool for turning blog posts into interactive code notebooks.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rameshvarun/blog-cells.git"
+  },
+  "homepage": "https://rameshvarun.github.io/blog-cells/",
   "devDependencies": {
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
@@ -13,11 +18,13 @@
     "ts-loader": "^9.4.4",
     "typescript": "^5.1.3",
     "webpack": "^5.88.2",
-    "webpack-cli": "^5.1.4"
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1",
+    "webpack-merge": "^5.9.0"
   },
   "scripts": {
     "start": "webpack serve --open --env mode=development",
-    "build": "rm -rf dist && webpack --mode production",
+    "build": "rm -rf dist && webpack --env mode=production",
     "format": "prettier --write src/*.ts src/*.tsx src/*.css",
     "typecheck": "tsc --noEmit"
   },
@@ -28,8 +35,6 @@
     "@codemirror/view": "^6.16.0",
     "codemirror": "^6.0.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "webpack-dev-server": "^4.15.1",
-    "webpack-merge": "^5.9.0"
+    "react-dom": "^18.2.0"
   }
 }

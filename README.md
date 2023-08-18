@@ -1,12 +1,13 @@
 # blog-cells
 [![Node.js CI](https://github.com/rameshvarun/blog-cells/actions/workflows/node.js.yml/badge.svg)](https://github.com/rameshvarun/blog-cells/actions/workflows/node.js.yml)
+[![npm](https://img.shields.io/npm/v/blog-cells)](https://www.npmjs.com/package/blog-cells)
 
 <a href="https://rameshvarun.github.io/blog-cells/">
 <p align="center"><img width="400px" src="./screenshot.png"></img></p>
 <p align="center">[VIEW DEMO]</p>
 </a>
 
-Add interactive code cells to any webpage, similar to [Jupyter](https://jupyter.org/) or [ObservableHQ](https://observablehq.com/). Works with direct HTML editing, static site generators like Jekyll / Hugo, and much more.
+Add interactive code cells to any webpage, similar to [Jupyter](https://jupyter.org/) or [ObservableHQ](https://observablehq.com/). Works with direct HTML editing, static site generators like Jekyll / Hugo, and more.
 
 ## Quickstart
 
@@ -18,11 +19,11 @@ console.log("Hello World!");
 </script>
 
 <!-- Import blog-cells after your cells are defined. -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rameshvarun/blog-cells@0.3.0/dist/blog-cells.css" />
-<script type="module" src="https://cdn.jsdelivr.net/gh/rameshvarun/blog-cells@0.3.0/dist/blog-cells.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/blog-cells@0.4.1/dist/blog-cells.css" />
+<script type="module" src="https://cdn.jsdelivr.net/npm/blog-cells@0.4.1/dist/blog-cells.js"></script>
 ```
 
-Try it on [CodePen](https://codepen.io/varunramesh/pen/WNYVNQQ) or [JSFiddle](https://jsfiddle.net/varunramesh/o217xpc5/8/).
+Try it on [CodePen](https://codepen.io/varunramesh/pen/WNYVNQQ) or [JSFiddle](https://jsfiddle.net/varunramesh/o217xpc5/9/).
 
 ## Using `pre` tags instead of `script` tags
 
@@ -33,8 +34,6 @@ Script tags are great for defining notebook cells since they can hold pretty muc
 console.log("&lt;b&gt;HELLO&lt;/b&gt;");
 </pre>
 ```
-
-### Rewrite `script` tags in place
 
 ### Integration with static site generator
 
