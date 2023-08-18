@@ -8,9 +8,9 @@
 
 Add interactive code cells to any webpage, similar to [Jupyter](https://jupyter.org/) or [ObservableHQ](https://observablehq.com/). Works with direct HTML editing, static site generators like Jekyll / Hugo, and much more.
 
-Just drop in JS / CSS imports and start creating code cells using `<script type="text/notebook-cell">` elements. <b>blog-cells</b> will transform these script tags into interactive, runnable code snippets.
+## Quickstart
 
-Try it on [CodePen](https://codepen.io/varunramesh/pen/WNYVNQQ) or [JSFiddle](https://jsfiddle.net/varunramesh/o217xpc5/8/).
+Just drop in JS / CSS imports and start creating code cells using `<script type="text/notebook-cell">` elements. <b>blog-cells</b> will transform these script tags into interactive, runnable code snippets.
 
 ```html
 <script type="text/notebook-cell">
@@ -22,9 +22,23 @@ console.log("Hello World!");
 <script type="module" src="https://cdn.jsdelivr.net/gh/rameshvarun/blog-cells@0.3.0/dist/blog-cells.js"></script>
 ```
 
-## pre.notebook-cell
+Try it on [CodePen](https://codepen.io/varunramesh/pen/WNYVNQQ) or [JSFiddle](https://jsfiddle.net/varunramesh/o217xpc5/8/).
 
-If you want to fallback properly in noscript cases, instead of script tags, you can use `<pre class="notebook-cell">` elements, however reserved HTML characters should be escaped using [HTML entities](https://developer.mozilla.org/en-US/docs/Glossary/Entity). I recommend setting up your static-site generator to do this (TODO: Examples).
+## Using `pre` tags instead of `script` tags
+
+Script tags are great for defining notebook cells since they can hold pretty much any code without escaping. However, they are invisible by default, meaning that readers won't see anything until blog-cells loads. You can get around this by using `<pre class="notebook-cell">` tags instead, however reserved HTML characters should be escaped using [HTML entities](https://developer.mozilla.org/en-US/docs/Glossary/Entity).
+
+```html
+<pre class="notebook-cell">
+console.log("&lt;b&gt;HELLO&lt;/b&gt;");
+</pre>
+```
+
+### Rewrite `script` tags in place
+
+### Integration with static site generator
+
+TODO
 
 ## Alternatives
 - https://starboard.gg/

@@ -1,62 +1,26 @@
 // @ts-ignore
 import WORKER_SRC from "!raw-loader!ts-loader!./blog-cells-worker.ts";
 
+import { history, defaultKeymap, historyKeymap } from "@codemirror/commands";
+import {
+  EditorView,
+  lineNumbers,
+  keymap,
+} from "@codemirror/view";
+import { javascript } from "@codemirror/lang-javascript";
+import { oneDark } from "@codemirror/theme-one-dark";
+
 import * as React from "react";
 import * as ReactDOM from "react-dom/client";
 
 const SCRIPT_URL = import.meta.url;
 const SCRIPT_DIR = SCRIPT_URL.substring(0, SCRIPT_URL.lastIndexOf("/"));
 
-function LoadCSS(href: string) {
-  return new Promise<void>((resolve, reject) => {
-    let link = document.createElement("link");
-    link.rel = "stylesheet";
-    link.href = href;
-    link.onload = () => resolve();
-    document.head.appendChild(link);
-  });
-}
-
-function LoadScript(href: string) {
-  return new Promise<void>((resolve, reject) => {
-    let script = document.createElement("script");
-    script.type = "application/javascript";
-    script.src = href;
-    script.onload = () => resolve();
-    document.head.appendChild(script);
-  });
-}
-
 const domLoaded = new Promise<void>((resolve) => {
   document.addEventListener("DOMContentLoaded", () => resolve());
 });
 
-const resources: string[] = [
-  // CodeMirror
-  "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.9/codemirror.min.css",
-  "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.9/theme/monokai.min.css",
-  "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.9/codemirror.min.js",
-  "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/javascript/javascript.min.js",
-
-  // Font Awesome
-  "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css",
-];
-
-async function loadResource() {
-  for (const resource of resources) {
-    if (resource.endsWith(".js")) {
-      await LoadScript(resource);
-    } else if (resource.endsWith(".css")) {
-      await LoadCSS(resource);
-    } else {
-      throw new Error(`Unknown resource type.`);
-    }
-  }
-}
-
-declare var CodeMirror: any;
-
-Promise.all([domLoaded, loadResource()]).then(() => {
+Promise.all([domLoaded]).then(() => {
   const blob = new Blob([WORKER_SRC], { type: "application/javascript" });
 
   let worker: Worker = new Worker(URL.createObjectURL(blob));
@@ -85,8 +49,8 @@ Promise.all([domLoaded, loadResource()]).then(() => {
     },
     any
   > {
-    codeMirror: any;
-    editor: any;
+    codeMirror: EditorView | null = null;
+    editor: React.RefObject<HTMLDivElement> = React.createRef();
 
     running: boolean;
     mounted: boolean;
@@ -94,9 +58,6 @@ Promise.all([domLoaded, loadResource()]).then(() => {
     constructor(props) {
       super(props);
       this.state = { kind: "ready", output: [] };
-
-      this.editor = React.createRef();
-      this.codeMirror = null;
 
       this.running = false;
       this.mounted = false;
@@ -120,7 +81,7 @@ Promise.all([domLoaded, loadResource()]).then(() => {
 
     render() {
       return (
-        <div className="code-mirror-container">
+        <div className="cell-editor">
           {this.props.hideable ? (
             <div
               className="cell-header"
@@ -140,10 +101,7 @@ Promise.all([domLoaded, loadResource()]).then(() => {
               transition: "opacity 0.2s ease 0s",
             }}
           >
-            <textarea
-              ref={this.editor}
-              defaultValue={this.props.code}
-            ></textarea>
+            <div ref={this.editor}></div>
             {this.state.output.length > 0 ? (
               <div>
                 <pre className="snippet-output">
@@ -161,7 +119,7 @@ Promise.all([domLoaded, loadResource()]).then(() => {
                 "run-bar run-bar-" +
                 (this.state.kind === "running" ? "running" : "ready")
               }
-              onClick={() => this.run(this.codeMirror.getValue())}
+              onClick={() => this.run(this.codeMirror!.state.doc.toString())}
             >
               {this.state.kind === "ready" ? (
                 <div>
@@ -190,10 +148,16 @@ Promise.all([domLoaded, loadResource()]).then(() => {
 
     componentDidMount() {
       this.mounted = true;
-      this.codeMirror = CodeMirror.fromTextArea(this.editor.current, {
-        mode: "javascript",
-        theme: "monokai",
-        lineNumbers: true,
+      this.codeMirror = new EditorView({
+        parent: this.editor.current!,
+        doc: this.props.code,
+        extensions: [
+          history(),
+          lineNumbers(),
+          javascript(),
+          oneDark,
+          keymap.of([...defaultKeymap, ...historyKeymap]),
+        ],
       });
       editors.push(this.codeMirror);
     }
