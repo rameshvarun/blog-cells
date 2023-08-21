@@ -35,10 +35,6 @@ console.log("&lt;b&gt;HELLO&lt;/b&gt;");
 </pre>
 ```
 
-### Integration with static site generator
-
-TODO
-
 ## Alternatives
 - https://starboard.gg/
 - https://observablehq.com/
