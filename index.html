@@ -15,12 +15,10 @@
 <hr/>
 </p>
 
-<p><a href="https://github.com/rameshvarun/blog-cells/blob/main/index.html">[View Page Source]</a></p>
-
 <p><a href="https://github.com/rameshvarun/blog-cells">blog-cells</a> can turn any web page into an interactive code notebook, similar to
 Jupyter notebooks, but powered by JavaScript and running entirely in the browser.</p>
 <p>There's no server-side component, so you can share your notebooks on static site
-hosts like GitHub pages.</p>
+hosts like GitHub pages. Check out <a href="https://github.com/rameshvarun/blog-cells/blob/main/index.html">the source for this page here</a>.</p>
 <p>You create your program in cells, just like the one below.</p>
 
 <p>
@@ -107,7 +105,19 @@ console.warn("Warning output.")
 console.assert(3 == 4, "3 does not equal 4.");
 </script>
 
-<link rel="stylesheet" href="dist/blog-cells.css" />
-<script type="module" src="dist/blog-cells.js"></script>
+<script>
+document.querySelectorAll("script[type='text/notebook-cell']").forEach(script => {
+  const cell = document.createElement("pre");
+  cell.classList.add("notebook-cell");
+  cell.textContent = script.textContent.trim();
+  Object.assign(cell.dataset, script.dataset);
+  script.parentNode.insertBefore(cell, script);
+  script.parentNode.removeChild(script);
+});
+</script>
+
+<link rel="stylesheet" href="./blog-cells.css" />
+<script type="module" src="./blog-cells.js"></script>
+
 </body>
 </html>
