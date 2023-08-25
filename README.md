@@ -35,6 +35,12 @@ console.log("&lt;b&gt;HELLO&lt;/b&gt;");
 </pre>
 ```
 
+## Attributions
+
+This repo contains assets from other open source projects.
+
+- [https://github.com/SamHerbert/SVG-Loaders](https://github.com/SamHerbert/SVG-Loaders) (MIT)
+
 ## Alternatives
 - https://starboard.gg/
 - https://observablehq.com/
