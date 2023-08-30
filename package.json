@@ -29,9 +29,7 @@
     "start": "webpack serve --open --env mode=development",
     "build": "rm -rf dist && webpack --env mode=production",
     "format": "prettier --write src/*.ts src/*.tsx src/*.css",
-    "typecheck": "tsc --noEmit",
-    "test": "jest",
-    "test:watch": "jest --watch"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@babel/standalone": "^7.22.13",
