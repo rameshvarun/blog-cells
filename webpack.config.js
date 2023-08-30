@@ -41,7 +41,12 @@ const development = {
   mode: "development",
   devtool: "inline-source-map",
   devServer: {
-    host: "local-ipv4"
+    host: "local-ipv4",
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+      "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
+    }
   }
 };
 

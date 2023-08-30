@@ -31,6 +31,43 @@ function formatArg(arg: any): string {
   }
 }
 
+importScripts("https://unpkg.com/@babel/standalone/babel.min.js");
+declare var Babel: any;
+
+// TODO: Is there a better way to do this without a mutable global variable?
+let MODULE_KEYS: string[] = [];
+
+Babel.registerPlugin("autoprefixer", ({ types }) => {
+    return {
+      visitor: {
+        ReferencedIdentifier: (path, state) => {
+          // Skip if this variable has been bound.
+          const name = path.node.name;
+          if (path.scope.hasBinding(name)) return;
+
+          // Skip if this variable is not defined on the module.
+          if (!MODULE_KEYS.includes(name)) return;
+
+          // Replace the identifier with a lookup.
+          path.replaceWith(
+            types.memberExpression(
+              types.identifier("$"),
+              types.identifier(name),
+              false
+            )
+          );
+        },
+      },
+    };
+});
+
+function transform(code: string, moduleKeys: string[] = []): string {
+    MODULE_KEYS = moduleKeys;
+    return Babel.transform(code, {
+        plugins: ["autoprefixer"],
+    }).code!;
+}
+
 function formatArgs(args: any[]): string {
   return args
     .map((arg) => {
@@ -86,7 +123,7 @@ class Executor {
         const module = `// ExecutionID: ${generateExecutionID()};
 const $ = globalThis.module;
 const console = globalThis.cellConsole;
-${code}`;
+${transform(code, Object.keys(this.module))}`;
 
         console.log(module);
 
