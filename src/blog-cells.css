@@ -1,7 +1,7 @@
 @import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css");
 
 .cell-editor {
-  font-family: "Roboto Mono", monospace;
+  font-family: monospace;
   font-weight: 400;
 
   border: none;
@@ -57,7 +57,7 @@
 
   justify-content: center;
 
-  font-family: "Roboto Mono", monospace;
+  font-family: monospace;
   font-weight: 400;
   font-size: 14px;
   height: 2.5em;
@@ -89,7 +89,7 @@
   justify-content: center;
   align-items: center;
 
-  font-family: "Roboto Mono", monospace;
+  font-family: monospace;
   font-weight: 400;
 
   font-size: 14px;
@@ -109,16 +109,24 @@
   padding-right: 4px;
 }
 
-/* 
-.CodeMirror pre.CodeMirror-line {
-  padding: 0px 8px;
-}
-.CodeMirror-lines {
-  padding: 8px 0px;
-}
+script[type="text/notebook-cell"] {
+  display: block;
+  white-space: pre;
 
-.CodeMirror-linenumber {
-  padding-right: 8px;
-  padding-left: 10px;
+  background-color: rgb(40, 44, 52);
+  color: rgb(171, 178, 191);
+  padding: 10px;
+
+  font-family: monospace;
+
+  font-size: 14px;
+  line-height: 1.45em;
+
+  overflow-x: scroll;
+
+  box-shadow: 0 0 5px 1px #000000c6;
+  border-radius: 4px;
+
+  margin-top: 25px;
+  margin-bottom: 25px;
 }
-*/
