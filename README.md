@@ -19,8 +19,8 @@ console.log("Hello World!");
 </script>
 
 <!-- Import blog-cells after your cells are defined. -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/blog-cells@0.4.1/dist/blog-cells.css" />
-<script type="module" src="https://cdn.jsdelivr.net/npm/blog-cells@0.4.1/dist/blog-cells.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/blog-cells@0.5.0/dist/blog-cells.css" />
+<script type="module" src="https://cdn.jsdelivr.net/npm/blog-cells@0.5.0/dist/blog-cells.js"></script>
 ```
 
 Try it on [CodePen](https://codepen.io/varunramesh/pen/WNYVNQQ) or [JSFiddle](https://jsfiddle.net/varunramesh/o217xpc5/9/).
