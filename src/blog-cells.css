@@ -34,7 +34,7 @@
   padding: 10px 20px;
   color-scheme: dark;
 
-  overflow: scroll;
+  overflow: auto;
 }
 
 /* Log Line Colors */
@@ -122,7 +122,7 @@ script[type="text/notebook-cell"] {
   font-size: 14px;
   line-height: 1.45em;
 
-  overflow-x: scroll;
+  overflow-x: auto;
 
   box-shadow: 0 0 5px 1px #000000c6;
   border-radius: 4px;
