@@ -22,25 +22,20 @@ hosts like GitHub pages. Check out <a href="https://github.com/rameshvarun/blog-
 <p>You create your program in cells, just like the one below.</p>
 
 <p>
-<script type="text/notebook-cell" data-autorun="true">
-console.log("Hello World!");
-</script>
+<script type="text/notebook-cell" data-autorun="true">console.log("Hello World!");</script>
 </p>
 
 <p>Cells can run either automatically on page load, or can wait until the reader
 explicitly runs them.</p>
 
 <p>
-<script type="text/notebook-cell">
-console.log("Hello World, but not automatic.");
-</script>
+<script type="text/notebook-cell">console.log("Hello World, but not automatic.");</script>
 </p>
 
 <p>Each cell is a module. You can export functions and values from one cell to be used in others.</p>
 
 <p>
-<script type="text/notebook-cell" data-autorun="true">
-export function hello() {
+<script type="text/notebook-cell" data-autorun="true">export function hello() {
   console.log("Hello World, from an exported function!");
 }
 
@@ -48,28 +43,25 @@ export const test = 3;
 </script>
 </p>
 
-<p>The exported values are available in other cells using the <code>$</code> global.</p>
+<p>The exported values are available in other cells.</p>
 
 <p>
-<script type="text/notebook-cell" data-autorun="true">
-$.hello();
-console.log($.test);
+<script type="text/notebook-cell" data-autorun="true">hello();
+console.log(test);
 </script>
 </p>
 
 <p>Cells can be hidden by default.</p>
 
 <p>
-<script type="text/notebook-cell" data-autorun="true" data-hidden="true">
-// The cell is hidden but the code is still evaluated.
+<script type="text/notebook-cell" data-autorun="true" data-hidden="true">// The cell is hidden but the code is still evaluated.
 console.log("This cell is hidden by default.");
 </script>
 </p>
 
 <p>You can use top-level await syntax.</p>
 
-<script type="text/notebook-cell">
-function wait(time) {
+<script type="text/notebook-cell">function wait(time) {
   return new Promise((resolve, reject) => {
     setTimeout(() => resolve(), time);
   });
@@ -83,37 +75,23 @@ for (let i = 0; i < 10; ++i) {
 
 <p>You can query CORS-enabled APIs using fetch.</p>
 
-<script type="text/notebook-cell" data-autorun="true">
-const response = await fetch("https://pokeapi.co/api/v2/pokemon/ditto");
+<script type="text/notebook-cell" data-autorun="true">const response = await fetch("https://pokeapi.co/api/v2/pokemon/ditto");
 const data = await response.json();
 console.log(data);
 </script>
 
 <p>You can import third-party ES modules.</p>
 
-<script type="text/notebook-cell" data-autorun="true">
-import sum from "https://cdn.jsdelivr.net/npm/lodash-es@4.17.21/sum.js";
+<script type="text/notebook-cell" data-autorun="true">import sum from "https://cdn.jsdelivr.net/npm/lodash-es@4.17.21/sum.js";
 console.log(sum([1, 2, 3]));
 </script>
 
 <p>You can use several different console functions.</p>
 
-<script type="text/notebook-cell" data-autorun="true">
-console.log("Regular output.")
+<script type="text/notebook-cell" data-autorun="true">console.log("Regular output.")
 console.error("Error output.")
 console.warn("Warning output.")
 console.assert(3 == 4, "3 does not equal 4.");
-</script>
-
-<script>
-document.querySelectorAll("script[type='text/notebook-cell']").forEach(script => {
-  const cell = document.createElement("pre");
-  cell.classList.add("notebook-cell");
-  cell.textContent = script.textContent.trim();
-  Object.assign(cell.dataset, script.dataset);
-  script.parentNode.insertBefore(cell, script);
-  script.parentNode.removeChild(script);
-});
 </script>
 
 <link rel="stylesheet" href="./blog-cells.css" />
