@@ -30,6 +30,7 @@ class Cell extends React.Component<
     code: string;
     autoRun: boolean;
     hideable: boolean;
+    onMount?: () => void;
   },
   any
 > {
@@ -144,6 +145,10 @@ class Cell extends React.Component<
       ],
     });
     editors.push(this.codeMirror);
+
+    if (this.props.onMount) {
+      this.props.onMount();
+    }
   }
 
   async run(code) {
@@ -207,7 +212,7 @@ domLoaded.then(() => {
   const scripts = document.querySelectorAll(
     "script[type='text/notebook-cell'], pre.notebook-cell"
   ) as NodeListOf<HTMLScriptElement>;
-  
+
   for (const script of scripts) {
     const code = script.textContent?.trim() || "";
     const autoRun = script.dataset.autorun === "true";
@@ -215,9 +220,18 @@ domLoaded.then(() => {
 
     const editor = document.createElement("div");
     script.after(editor);
-    script.remove();
 
     const root = ReactDOM.createRoot(editor);
-    root.render(<Cell code={code} autoRun={autoRun} hideable={hidden} />);
+    root.render(
+      <Cell
+        code={code}
+        autoRun={autoRun}
+        hideable={hidden}
+        onMount={() => {
+          // Remove the script tag once the cell succesfully mounts.
+          script.remove();
+        }}
+      />
+    );
   }
 });

@@ -38,34 +38,34 @@ declare var Babel: any;
 let MODULE_KEYS: string[] = [];
 
 Babel.registerPlugin("autoprefixer", ({ types }) => {
-    return {
-      visitor: {
-        ReferencedIdentifier: (path, state) => {
-          // Skip if this variable has been bound.
-          const name = path.node.name;
-          if (path.scope.hasBinding(name)) return;
+  return {
+    visitor: {
+      ReferencedIdentifier: (path, state) => {
+        // Skip if this variable has been bound.
+        const name = path.node.name;
+        if (path.scope.hasBinding(name)) return;
 
-          // Skip if this variable is not defined on the module.
-          if (!MODULE_KEYS.includes(name)) return;
+        // Skip if this variable is not defined on the module.
+        if (!MODULE_KEYS.includes(name)) return;
 
-          // Replace the identifier with a lookup.
-          path.replaceWith(
-            types.memberExpression(
-              types.identifier("$"),
-              types.identifier(name),
-              false
-            )
-          );
-        },
+        // Replace the identifier with a lookup.
+        path.replaceWith(
+          types.memberExpression(
+            types.identifier("$"),
+            types.identifier(name),
+            false
+          )
+        );
       },
-    };
+    },
+  };
 });
 
 function transform(code: string, moduleKeys: string[] = []): string {
-    MODULE_KEYS = moduleKeys;
-    return Babel.transform(code, {
-        plugins: ["autoprefixer"],
-    }).code!;
+  MODULE_KEYS = moduleKeys;
+  return Babel.transform(code, {
+    plugins: ["autoprefixer"],
+  }).code!;
 }
 
 function formatArgs(args: any[]): string {
