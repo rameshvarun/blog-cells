@@ -13,13 +13,19 @@ const editors: any[] = [];
 const events = new EventTarget();
 
 import { JavaScriptKernel } from "./javascript-kernel";
-const kernel = new JavaScriptKernel();
+import { PythonKernel } from "./python-kernel";
+import { Kernel } from "./kernel";
+
+const KERNELS: Map<string, Kernel> = new Map();
+KERNELS.set("javascript", new JavaScriptKernel());
+KERNELS.set("python", new PythonKernel());
 
 class Cell extends React.Component<
   {
     code: string;
     autoRun: boolean;
     hideable: boolean;
+    kernel: Kernel;
     onMount?: () => void;
   },
   any
@@ -129,7 +135,7 @@ class Cell extends React.Component<
       extensions: [
         history(),
         lineNumbers(),
-        kernel.getSyntaxHighlighter(),
+        this.props.kernel.getSyntaxHighlighter(),
         oneDark,
         keymap.of([...defaultKeymap, ...historyKeymap]),
       ],
@@ -160,7 +166,7 @@ class Cell extends React.Component<
       setTimeout(() => resolve(), 500);
     });
 
-    kernel.run(
+    this.props.kernel.run(
       code,
       (line) => {
         this.setState((state) => {
@@ -196,6 +202,10 @@ domLoaded.then(() => {
 
   for (const script of scripts) {
     const code = script.textContent?.trim() || "";
+
+    const kernelName = script.dataset.kernel || "javascript";
+    const kernel = KERNELS.get(kernelName)!;
+
     const autoRun = script.dataset.autorun === "true";
     const hidden = script.dataset.hidden === "true";
 
@@ -208,6 +218,7 @@ domLoaded.then(() => {
         code={code}
         autoRun={autoRun}
         hideable={hidden}
+        kernel={kernel}
         onMount={() => {
           // Remove the script tag once the cell succesfully mounts.
           script.remove();

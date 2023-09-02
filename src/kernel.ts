@@ -1,11 +1,16 @@
 import { LanguageSupport } from "@codemirror/language";
 
 export type OutputLine = {
-  type: string;
+  type: 'log' | 'error' | 'warn';
   line: string;
 };
 
-export interface Kernel {
-  run(code: string, onOutput: (line: OutputLine) => void, onDone: () => void);
-  getSyntaxHighlighter(): LanguageSupport;
+export abstract class Kernel {
+  requestID: number = 0;
+  getRequestID() {
+      return this.requestID++;
+  }
+
+  abstract run(code: string, onOutput: (line: OutputLine) => void, onDone: () => void);
+  abstract getSyntaxHighlighter(): LanguageSupport;
 }
