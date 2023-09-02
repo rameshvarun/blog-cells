@@ -147,7 +147,7 @@ ${transform(code, Object.keys(this.module))}`;
 
 const executor = new Executor();
 
-self.onmessage = async (e) => {
+self.onmessage = async (e: MessageEvent) => {
   console.log("Worker received message: %o", e);
   const requestID = e.data.requestID;
   if (e.data.kind === "run-code") {

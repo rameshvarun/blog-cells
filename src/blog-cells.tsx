@@ -1,9 +1,5 @@
-// @ts-ignore
-import WORKER_SRC from "!raw-loader!ts-loader!./blog-cells-worker.ts";
-
 import { history, defaultKeymap, historyKeymap } from "@codemirror/commands";
 import { EditorView, lineNumbers, keymap } from "@codemirror/view";
-import { javascript } from "@codemirror/lang-javascript";
 import { oneDark } from "@codemirror/theme-one-dark";
 
 import * as React from "react";
@@ -13,17 +9,11 @@ import * as ReactDOM from "react-dom/client";
 const SCRIPT_URL = import.meta.url;
 const SCRIPT_DIR = SCRIPT_URL.substring(0, SCRIPT_URL.lastIndexOf("/"));
 
-// Create webworker.
-const blob = new Blob([WORKER_SRC], { type: "application/javascript" });
-const worker: Worker = new Worker(URL.createObjectURL(blob));
-
-let requestID = 0;
-function getRequestID() {
-  return requestID++;
-}
-
 const editors: any[] = [];
 const events = new EventTarget();
+
+import { JavaScriptKernel } from "./javascript-kernel";
+const kernel = new JavaScriptKernel();
 
 class Cell extends React.Component<
   {
@@ -139,7 +129,7 @@ class Cell extends React.Component<
       extensions: [
         history(),
         lineNumbers(),
-        javascript(),
+        kernel.getSyntaxHighlighter(),
         oneDark,
         keymap.of([...defaultKeymap, ...historyKeymap]),
       ],
@@ -166,21 +156,19 @@ class Cell extends React.Component<
       this.state.output = [];
     }
 
-    const requestID = getRequestID();
-
-    worker.postMessage({
-      kind: "run-code",
-      code: code,
-      requestID: requestID,
-    });
-
     const minimumWait = new Promise<void>((resolve, reject) => {
       setTimeout(() => resolve(), 500);
     });
 
-    const messageHandler = async (e) => {
-      if (e.data.requestID != requestID) return;
-      if (e.data.kind === "run-code-done") {
+    kernel.run(
+      code,
+      (line) => {
+        this.setState((state) => {
+          state.output.push(line);
+          return state;
+        });
+      },
+      async () => {
         // Wait the minimum amount of run-time.
         await minimumWait;
 
@@ -191,15 +179,8 @@ class Cell extends React.Component<
             state.output.push({ type: "log", line: "Done." });
           return state;
         });
-        worker.removeEventListener("message", messageHandler);
-      } else if (e.data.kind === "run-code-output") {
-        this.setState((state) => {
-          state.output.push(e.data.output);
-          return state;
-        });
       }
-    };
-    worker.addEventListener("message", messageHandler);
+    );
   }
 }
 
