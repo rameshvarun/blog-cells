@@ -1,4 +1,4 @@
-importScripts("https://cdn.jsdelivr.net/npm/pyodide@0.23.2/pyodide.min.js");
+importScripts("https://cdn.jsdelivr.net/npm/pyodide@0.23.4/pyodide.min.js");
 declare var loadPyodide;
 
 let onStdout: ((str) => void) | null = null;

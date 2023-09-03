@@ -16,9 +16,33 @@ import { JavaScriptKernel } from "./javascript-kernel";
 import { PythonKernel } from "./python-kernel";
 import { Kernel } from "./kernel";
 
-const KERNELS: Map<string, Kernel> = new Map();
-KERNELS.set("javascript", new JavaScriptKernel());
-KERNELS.set("python", new PythonKernel());
+// Register kernels by name and lazily initialize them.
+class KernelFactory {
+  initializers: Map<string, () => Kernel> = new Map();
+  kernels: Map<string, Kernel> = new Map();
+
+  register(name: string, initializer: () => Kernel) {
+    this.initializers.set(name, initializer);
+  }
+
+  get(name: string): Kernel {
+    if (this.kernels.has(name)) {
+      return this.kernels.get(name)!;
+    }
+    
+    if (this.initializers.has(name)) {
+      const kernel = this.initializers.get(name)!();
+      this.kernels.set(name, kernel);
+      return kernel;
+    }
+
+    throw new Error(`Unknown kernel: ${name}`);
+  }
+}
+
+const kernelFactory = new KernelFactory();
+kernelFactory.register("javascript", () => new JavaScriptKernel());
+kernelFactory.register("python", () => new PythonKernel());
 
 class Cell extends React.Component<
   {
@@ -204,7 +228,7 @@ domLoaded.then(() => {
     const code = script.textContent?.trim() || "";
 
     const kernelName = script.dataset.kernel || "javascript";
-    const kernel = KERNELS.get(kernelName)!;
+    const kernel = kernelFactory.get(kernelName);
 
     const autoRun = script.dataset.autorun === "true";
     const hidden = script.dataset.hidden === "true";
