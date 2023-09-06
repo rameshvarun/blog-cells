@@ -52,7 +52,7 @@ Cells can be configured with the following attributes:
 
 Script tags are great for defining notebook cells since they can hold pretty much any code without escaping. However, you can also use `<pre class="notebook-cell">` tags instead. When using `pre` tags, reserved HTML characters should be escaped using HTML entities (this can be done by your static site generator).
 
-```
+```html
 <pre class="notebook-cell">
 console.log("&lt;b&gt;HELLO&lt;/b&gt;");
 </pre>
@@ -60,7 +60,7 @@ console.log("&lt;b&gt;HELLO&lt;/b&gt;");
 
 ## Developing
 
-```
+```bash
 git clone https://github.com/rameshvarun/blog-cells.git
 cd blog-cells
 npm install
