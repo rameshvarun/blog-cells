@@ -34,6 +34,21 @@
         });
       });
 
+      describe("PythonKernel", () => {
+        it("Runs basic code.", (done) => {
+            const kernel = new BlogCells.PythonKernel();
+            const onOutput = chai.spy();
+            kernel.run("print('Hello World!');", onOutput, () => {
+                chai.expect(onOutput).to.have.been.called.with({
+                  type: "log",
+                  line: "Hello World!"
+                });
+
+                done();
+            });
+        }).timeout(10 * 1000);
+      });
+
       mocha.run();
     </script>
   </body>
