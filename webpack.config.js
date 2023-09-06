@@ -55,7 +55,7 @@ const development = {
   plugins: [
     new CopyPlugin({
       patterns: [
-        { from: "src/test.html", to: "." },
+        { from: "src/browser-unit.html", to: "." },
       ]
     }),
   ]
