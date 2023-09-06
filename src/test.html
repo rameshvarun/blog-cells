@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Mocha Tests</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://unpkg.com/mocha@10.2.0/mocha.css" />
+  </head>
+  <body>
+    <div id="mocha"></div>
+
+    <script src="https://unpkg.com/chai@4.3.8/chai.js"></script>
+    <script src="https://unpkg.com/chai-spies@1.0.0/chai-spies.js"></script>
+
+    <script src="https://unpkg.com/mocha@10.2.0/mocha.js"></script>
+    <script type="module" src="./blog-cells.js"></script>
+
+    <script class="mocha-init">
+      mocha.setup('bdd');
+    </script>
+    <script class="mocha-exec" type="module">
+      describe("JavaScriptKernel", () => {
+        it("Runs basic code.", (done) => {
+            const kernel = new BlogCells.JavaScriptKernel();
+            const onOutput = chai.spy();
+            kernel.run("console.log('Hello World!');", onOutput, () => {
+                chai.expect(onOutput).to.have.been.called.with({
+                  type: "log",
+                  line: "Hello World!"
+                });
+
+                done();
+            });
+        });
+      });
+
+      mocha.run();
+    </script>
+  </body>
+</html>

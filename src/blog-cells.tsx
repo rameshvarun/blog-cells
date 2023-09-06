@@ -16,6 +16,8 @@ import { JavaScriptKernel } from "./javascript-kernel";
 import { PythonKernel } from "./python-kernel";
 import { Kernel } from "./kernel";
 
+export { JavaScriptKernel, PythonKernel};
+
 // Register kernels by name and lazily initialize them.
 class KernelFactory {
   initializers: Map<string, () => Kernel> = new Map();

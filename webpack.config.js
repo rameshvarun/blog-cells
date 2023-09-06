@@ -24,7 +24,11 @@ const common = {
     },
     output: {
       filename: "blog-cells.js",
-      path: path.resolve(__dirname, "dist")
+      path: path.resolve(__dirname, "dist"),
+      library: {
+        name: "BlogCells",
+        type: "window"
+      }
     },
     plugins: [
       new CopyPlugin({
@@ -47,7 +51,14 @@ const development = {
       "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
       "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
     }
-  }
+  },
+  plugins: [
+    new CopyPlugin({
+      patterns: [
+        { from: "src/test.html", to: "." },
+      ]
+    }),
+  ]
 };
 
 const production = {
