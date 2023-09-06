@@ -48,6 +48,16 @@ Cells can be configured with the following attributes:
 - `data-autorun="true"` - Automatically run a cell on page load. Autorun cells are run in the order that they appear on the page.
 - `data-hidden="true"` - Make a cell hidden by default - readers can toggle the cell's visibility.
 
+### Using `<pre>` tags instead of `<script>` tags
+
+Script tags are great for defining notebook cells since they can hold pretty much any code without escaping. However, you can also use `<pre class="notebook-cell">` tags instead. When using `pre` tags, reserved HTML characters should be escaped using HTML entities (this can be done by your static site generator).
+
+```
+<pre class="notebook-cell">
+console.log("&lt;b&gt;HELLO&lt;/b&gt;");
+</pre>
+```
+
 ## Developing
 
 ```
