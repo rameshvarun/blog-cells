@@ -151,10 +151,6 @@ self.onmessage = async (e: MessageEvent) => {
   console.log("Worker received message: %o", e);
   const requestID = e.data.requestID;
   if (e.data.kind === "run-code") {
-    self.postMessage({
-      kind: "run-code-waiting",
-      requestID: requestID,
-    });
     await executor.run(e.data.code, (type, output) => {
       self.postMessage({
         kind: "run-code-output",

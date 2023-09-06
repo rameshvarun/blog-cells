@@ -35,6 +35,15 @@ console.log("&lt;b&gt;HELLO&lt;/b&gt;");
 </pre>
 ```
 
+## Developing
+
+```
+git clone https://github.com/rameshvarun/blog-cells.git
+cd blog-cells
+npm install
+npm start
+```
+
 ## Attributions
 
 This repo contains assets from other open source projects.

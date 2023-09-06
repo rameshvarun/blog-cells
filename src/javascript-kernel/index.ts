@@ -4,7 +4,21 @@ const blob = new Blob([WORKER_SRC], { type: "application/javascript" });
 
 import { javascript } from "@codemirror/lang-javascript";
 import { Kernel, OutputLine } from "../kernel";
-import { ExecutionRequest, ExecutionResponse } from "./types";
+
+export type ExecutionRequest = {
+    kind: "run-code";
+    code: string;
+    requestID: number;
+}
+
+export type ExecutionResponse = {
+    kind: "run-code-output";
+    output: OutputLine;
+    requestID: number;
+} | {
+    kind: "run-code-done";
+    requestID: number;
+};
 
 export class JavaScriptKernel extends Kernel {
     worker: Worker = new Worker(URL.createObjectURL(blob));
