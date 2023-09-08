@@ -31,7 +31,7 @@ function formatArg(arg: any): string {
   }
 }
 
-importScripts("https://unpkg.com/@babel/standalone/babel.min.js");
+importScripts("https://unpkg.com/@babel/standalone@7.22.16/babel.min.js");
 declare var Babel: any;
 
 // TODO: Is there a better way to do this without a mutable global variable?
