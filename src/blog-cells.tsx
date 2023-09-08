@@ -16,7 +16,7 @@ import { JavaScriptKernel } from "./javascript-kernel";
 import { PythonKernel } from "./python-kernel";
 import { Kernel } from "./kernel";
 
-export { JavaScriptKernel, PythonKernel };
+export { JavaScriptKernel, PythonKernel, Kernel };
 
 // Register kernels by name and lazily initialize them.
 class KernelFactory {
@@ -45,6 +45,9 @@ class KernelFactory {
 const kernelFactory = new KernelFactory();
 kernelFactory.register("javascript", () => new JavaScriptKernel());
 kernelFactory.register("python", () => new PythonKernel());
+
+export const registerKernel = kernelFactory.register.bind(kernelFactory);
+export const getKernel = kernelFactory.get.bind(kernelFactory);
 
 class Cell extends React.Component<
   {

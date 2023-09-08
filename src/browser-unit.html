@@ -101,6 +101,26 @@
         }).timeout(10 * 1000);
       });
 
+      describe("registerKernel", () => {
+        it("Allows the user to create and use a custom kernel.", async () => {
+          class CustomKernel extends BlogCells.Kernel {
+            async run(code, onOutput) {
+              onOutput({ type: "log", line: `Custom: ${code}` });
+            }
+          }
+
+          BlogCells.registerKernel("custom", () => new CustomKernel());
+
+          const onOutput = chai.spy();
+          await BlogCells.getKernel("custom").run("Hello World", onOutput);
+
+          chai.expect(onOutput).to.have.been.called.with({
+            type: "log",
+            line: "Custom: Hello World",
+          });
+        });
+      });
+
       window.__result__ = new Promise((resolve) => {
         mocha.run(resolve);
       });

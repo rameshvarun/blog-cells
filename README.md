@@ -16,13 +16,14 @@ Add interactive code cells to any webpage, similar to [Jupyter](https://jupyter.
 Just drop in JS / CSS imports and start creating code cells using `<script type="text/notebook-cell">` elements. <b>blog-cells</b> will transform these script tags into interactive, runnable code snippets.
 
 ```html
+<!-- Import blog-cells JS and CSS files. -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/blog-cells@0.6.0/dist/blog-cells.css" />
+<script type="module" src="https://cdn.jsdelivr.net/npm/blog-cells@0.6.0/dist/blog-cells.js"></script>
+
+<!-- Create your code cells in script tags -->
 <script type="text/notebook-cell">
 console.log("Hello World!");
 </script>
-
-<!-- Import blog-cells after your cells are defined. -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/blog-cells@0.6.0/dist/blog-cells.css" />
-<script type="module" src="https://cdn.jsdelivr.net/npm/blog-cells@0.6.0/dist/blog-cells.js"></script>
 ```
 
 Try it on [CodePen](https://codepen.io/varunramesh/pen/WNYVNQQ) or [JSFiddle](https://jsfiddle.net/varunramesh/o217xpc5/9/).
@@ -56,6 +57,30 @@ Script tags are great for defining notebook cells since they can hold pretty muc
 <pre class="notebook-cell">
 console.log("&lt;b&gt;HELLO&lt;/b&gt;");
 </pre>
+```
+
+### Creating a Custom Kernel
+
+You can easily define and use your own custom kernels.
+
+```html
+<!-- Import blog-cells JS and CSS files. -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/blog-cells@0.6.0/dist/blog-cells.css" />
+<script type="module" src="https://cdn.jsdelivr.net/npm/blog-cells@0.6.0/dist/blog-cells.js"></script>
+
+<script>
+class JSONFormatKernel extends BlogCells.Kernel {
+    async run(code, onOutput) {
+        const data = JSON.parse(code);
+        onOutput({ type: "log", line: JSON.stringify(code, undefined, 2) });
+    }
+}
+BlogCells.registerKernel("json-format", () => new EvalKernel());
+</script>
+
+<script type="text/notebook-cell" data-kernel="json-format">
+[4, {"hello": 3}]
+</script>
 ```
 
 ## Developing
