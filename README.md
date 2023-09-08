@@ -18,7 +18,7 @@ Just drop in JS / CSS imports and start creating code cells using `<script type=
 ```html
 <!-- Import blog-cells JS and CSS files. -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/blog-cells@0.6.0/dist/blog-cells.css" />
-<script type="module" src="https://cdn.jsdelivr.net/npm/blog-cells@0.6.0/dist/blog-cells.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/blog-cells@0.6.0/dist/blog-cells.js"></script>
 
 <!-- Create your code cells in script tags -->
 <script type="text/notebook-cell">
@@ -66,18 +66,20 @@ You can easily define and use your own custom kernels.
 ```html
 <!-- Import blog-cells JS and CSS files. -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/blog-cells@0.6.0/dist/blog-cells.css" />
-<script type="module" src="https://cdn.jsdelivr.net/npm/blog-cells@0.6.0/dist/blog-cells.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/blog-cells@0.6.0/dist/blog-cells.js"></script>
 
+<!-- Define custom kernel -->
 <script>
 class JSONFormatKernel extends BlogCells.Kernel {
-    async run(code, onOutput) {
-        const data = JSON.parse(code);
-        onOutput({ type: "log", line: JSON.stringify(code, undefined, 2) });
-    }
+  async run(code, onOutput) {
+    const data = JSON.parse(code.trim());
+    onOutput({ type: "log", line: JSON.stringify(data, undefined, 2) });
+  }
 }
-BlogCells.registerKernel("json-format", () => new EvalKernel());
+BlogCells.registerKernel("json-format", () => new JSONFormatKernel());
 </script>
-
+  
+<!-- Use custom Kernel -->
 <script type="text/notebook-cell" data-kernel="json-format">
 [4, {"hello": 3}]
 </script>

@@ -16,5 +16,7 @@ export abstract class Kernel {
     onOutput: (line: OutputLine) => void
   ): Promise<void>;
 
-  abstract getSyntaxHighlighter(): LanguageSupport;
+  getSyntaxHighlighter(): LanguageSupport | null {
+    return null;
+  };
 }

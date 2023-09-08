@@ -105,19 +105,5 @@ for i in range(5):
 <link rel="stylesheet" href="./blog-cells.css" />
 <script src="./blog-cells.js"></script>
 
-<script>
-  class JSONFormatKernel extends BlogCells.Kernel {
-      async run(code, onOutput) {
-          const data = JSON.parse(code);
-          onOutput({ type: "log", line: JSON.stringify(code, undefined, 2) });
-      }
-  }
-  BlogCells.registerKernel("json-format", () => new JSONFormatKernel());
-  </script>
-  
-  <script type="text/notebook-cell" data-kernel="json-format">
-  [4, {"hello": 3}]
-  </script>
-
 </body>
 </html>

@@ -6,7 +6,7 @@ import * as React from "react";
 import * as ReactDOM from "react-dom/client";
 
 // Figure out the parent URL of this script.
-const SCRIPT_URL = import.meta.url;
+const SCRIPT_URL = (document.currentScript as HTMLScriptElement).src;
 const SCRIPT_DIR = SCRIPT_URL.substring(0, SCRIPT_URL.lastIndexOf("/"));
 
 const editors: any[] = [];
@@ -158,16 +158,23 @@ class Cell extends React.Component<
 
   componentDidMount() {
     this.mounted = true;
+
+    const extensions = [
+      history(),
+      lineNumbers(),
+      oneDark,
+      keymap.of([...defaultKeymap, ...historyKeymap]),
+    ];
+
+    const syntaxHighlighter = this.props.kernel.getSyntaxHighlighter();
+    if (syntaxHighlighter) {
+      extensions.push(syntaxHighlighter);
+    }
+
     this.codeMirror = new EditorView({
       parent: this.editor.current!,
       doc: this.props.code,
-      extensions: [
-        history(),
-        lineNumbers(),
-        this.props.kernel.getSyntaxHighlighter(),
-        oneDark,
-        keymap.of([...defaultKeymap, ...historyKeymap]),
-      ],
+      extensions: extensions,
     });
     editors.push(this.codeMirror);
 
