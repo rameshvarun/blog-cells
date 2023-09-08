@@ -101,7 +101,9 @@
         }).timeout(10 * 1000);
       });
 
-      mocha.run();
+      window.__result__ = new Promise((resolve) => {
+        mocha.run(resolve);
+      });
     </script>
   </body>
 </html>
