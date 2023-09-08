@@ -29,7 +29,7 @@
   "scripts": {
     "start": "webpack serve --open --env mode=development",
     "build": "rm -rf dist && webpack --env mode=production",
-    "format": "prettier --write src/*.ts src/*.tsx src/*.css",
+    "format": "prettier --write src/*.ts src/*.tsx src/*.css src/browser-unit.html",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

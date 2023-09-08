@@ -13,8 +13,8 @@ export abstract class Kernel {
 
   abstract run(
     code: string,
-    onOutput: (line: OutputLine) => void,
-    onDone: () => void
-  );
+    onOutput: (line: OutputLine) => void
+  ): Promise<void>;
+
   abstract getSyntaxHighlighter(): LanguageSupport;
 }

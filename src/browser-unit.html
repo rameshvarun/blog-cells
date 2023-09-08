@@ -16,36 +16,88 @@
     <script type="module" src="./blog-cells.js"></script>
 
     <script class="mocha-init">
-      mocha.setup('bdd');
+      mocha.setup("bdd");
+      chai.config.truncateThreshold = 0;
     </script>
     <script class="mocha-exec" type="module">
       describe("JavaScriptKernel", () => {
-        it("Runs basic code.", (done) => {
-            const kernel = new BlogCells.JavaScriptKernel();
-            const onOutput = chai.spy();
-            kernel.run("console.log('Hello World!');", onOutput, () => {
-                chai.expect(onOutput).to.have.been.called.with({
-                  type: "log",
-                  line: "Hello World!"
-                });
+        it("Runs basic code.", async () => {
+          const kernel = new BlogCells.JavaScriptKernel();
+          const onOutput = chai.spy();
+          await kernel.run("console.log('Hello World!');", onOutput);
 
-                done();
-            });
+          chai.expect(onOutput).to.have.been.called.with({
+            type: "log",
+            line: "Hello World!",
+          });
+        });
+
+        it("Allows defining code across cells.", async () => {
+          const kernel = new BlogCells.JavaScriptKernel();
+          const onOutput = chai.spy();
+          await kernel.run(
+            `export function hello() { return "Hello World!"; }`,
+            onOutput
+          );
+          await kernel.run(`console.log(hello());`, onOutput);
+
+          chai.expect(onOutput).to.have.been.called.with({
+            type: "log",
+            line: "Hello World!",
+          });
         });
       });
 
       describe("PythonKernel", () => {
-        it("Runs basic code.", (done) => {
-            const kernel = new BlogCells.PythonKernel();
-            const onOutput = chai.spy();
-            kernel.run("print('Hello World!');", onOutput, () => {
-                chai.expect(onOutput).to.have.been.called.with({
-                  type: "log",
-                  line: "Hello World!"
-                });
+        it("Runs basic code.", async () => {
+          const kernel = new BlogCells.PythonKernel();
+          const onOutput = chai.spy();
+          await kernel.run("print('Hello World!');", onOutput);
 
-                done();
-            });
+          chai.expect(onOutput).to.have.been.called.with({
+            type: "log",
+            line: "Hello World!",
+          });
+        }).timeout(10 * 1000);
+
+        it("Allows defining code across cells.", async () => {
+          const kernel = new BlogCells.PythonKernel();
+          const onOutput = chai.spy();
+          await kernel.run(`def hello(): return "Hello World!"`, onOutput);
+          await kernel.run(`print(hello())`, onOutput);
+
+          chai.expect(onOutput).to.have.been.called.with({
+            type: "log",
+            line: "Hello World!",
+          });
+        }).timeout(10 * 1000);
+
+        it("Allows importing packages with micropip.", async () => {
+          const kernel = new BlogCells.PythonKernel();
+          const onOutput = chai.spy();
+          await kernel.run(
+            `import micropip; await micropip.install("numpy")`,
+            onOutput
+          );
+          await kernel.run(
+            `import numpy as np; print(np.zeros(shape=(3, 3)))`,
+            onOutput
+          );
+
+          console.log(onOutput);
+
+          chai.expect(onOutput).on.nth(1).been.called.with({
+            type: "log",
+            line: "[[0. 0. 0.]",
+          });
+          chai.expect(onOutput).on.nth(2).been.called.with({
+            type: "log",
+            line: " [0. 0. 0.]",
+          });
+          chai.expect(onOutput).on.nth(3).been.called.with({
+            type: "log",
+            line: " [0. 0. 0.]]",
+          });
         }).timeout(10 * 1000);
       });
 

@@ -192,27 +192,27 @@ class Cell extends React.Component<
       setTimeout(() => resolve(), 500);
     });
 
-    this.props.kernel.run(
-      code,
-      (line) => {
-        this.setState((state) => {
-          state.output.push(line);
-          return state;
-        });
-      },
-      async () => {
-        // Wait the minimum amount of run-time.
-        await minimumWait;
+    // Run the code.
+    await this.props.kernel.run(code, (line) => {
+      this.setState((state) => {
+        state.output.push(line);
+        return state;
+      });
+    });
 
-        this.running = false;
-        this.setState((state) => {
-          state.kind = "re-runnable";
-          if (state.output.length === 0)
-            state.output.push({ type: "log", line: "Done." });
-          return state;
-        });
-      }
-    );
+    // Wait the minimum amount of run-time.
+    await minimumWait;
+
+    // Mark as not running.
+    this.running = false;
+
+    // Update the state.
+    this.setState((state) => {
+      state.kind = "re-runnable";
+      if (state.output.length === 0)
+        state.output.push({ type: "log", line: "Done." });
+      return state;
+    });
   }
 }
 
