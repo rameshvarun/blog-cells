@@ -7,7 +7,7 @@ import * as mime from "mime-types";
 import * as util from "util";
 
 test('Browser Unit Tests', async () => {
-    child_process.spawnSync('npm', ['run', 'build:dev'], { stdio: 'inherit' });
+    child_process.execSync("npm run build:dev");
 
     const PORT = 3000;
     const ROOT_PATH = path.join(process.cwd(), "./dist");
