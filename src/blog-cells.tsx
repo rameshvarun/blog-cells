@@ -16,7 +16,7 @@ import { JavaScriptKernel } from "./javascript-kernel";
 import { PythonKernel } from "./python-kernel";
 import { Kernel } from "./kernel";
 
-export { JavaScriptKernel, PythonKernel};
+export { JavaScriptKernel, PythonKernel };
 
 // Register kernels by name and lazily initialize them.
 class KernelFactory {
@@ -31,7 +31,7 @@ class KernelFactory {
     if (this.kernels.has(name)) {
       return this.kernels.get(name)!;
     }
-    
+
     if (this.initializers.has(name)) {
       const kernel = this.initializers.get(name)!();
       this.kernels.set(name, kernel);

@@ -1,16 +1,9 @@
 importScripts("https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js");
 declare var loadPyodide;
 
-let onStdout: ((str) => void) | null = null;
-
-// Start loading Pyodide asynchronously.
+// Start loading Pyodide immediately.
 const loadPython = (async () => {
-  let pyodide = await loadPyodide({
-    stdout: (msg) => {
-      if (msg === "Python initialization complete") return;
-      if (onStdout) onStdout(msg);
-    },
-  });
+  let pyodide = await loadPyodide();
 
   // Install micropip by default. Users can install
   // additional packages using `micropip.install()`.
@@ -19,40 +12,55 @@ const loadPython = (async () => {
   return pyodide;
 })();
 
+class PythonExecutor {
+  ready: Promise<void>;
+
+  constructor() {
+    this.ready = Promise.resolve();
+  }
+
+  run(
+    code,
+    output: (logType: string, logLine: string) => void = (type, line) => {}
+  ) {
+    const done = this.ready
+      .then(async () => {
+        const pyodide = await loadPython;
+        pyodide.setStdout({
+          isatty: false,
+          batched: (line: string) => {
+            output("log", line);
+          }
+        });
+        await pyodide.runPythonAsync(code);
+        pyodide.setStdout({});
+      })
+      .catch((error) => {
+        output("error", error.toString());
+      });
+    this.ready = done;
+    return done;
+  }
+}
+
+const pyExecutor = new PythonExecutor();
+
 self.onmessage = async (e: MessageEvent) => {
   console.log("Worker received message: %o", e);
   const requestID = e.data.requestID;
 
   if (e.data.kind === "run-code") {
-    // Register stdout callback.
-    onStdout = (msg) => {
+    await pyExecutor.run(e.data.code, (type, output) => {
       self.postMessage({
         kind: "run-code-output",
         requestID: requestID,
-        output: {type: "log", line: msg},
+        output: {type: type, line: output},
       });
-    };
+    });
 
-    try {
-      // Wait for Pyodide to load.
-      const pyodide = await loadPython;
-
-      // Run code in a new namespace.
-      pyodide.runPython(e.data.code);
-    } catch (error) {
-      self.postMessage({
-        kind: "run-code-output",
-        requestID: requestID,
-        output: {type: "error", line: error.toString()},
-      });
-    } finally {
-      // Unregister stdout callback.
-      onStdout = null;
-
-      self.postMessage({
-        kind: "run-code-done",
-        requestID: requestID,
-      });
-    }
+    self.postMessage({
+      kind: "run-code-done",
+      requestID: requestID,
+    });
   }
 };
