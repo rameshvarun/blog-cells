@@ -57,28 +57,29 @@ class Cell extends React.Component<
     kernel: Kernel;
     onMount?: () => void;
   },
-  any
+  {
+    kind: "ready" | "running" | "re-runnable";
+    output: { type: string; line: string }[];
+    hidden: boolean;
+  }
 > {
   codeMirror: EditorView | null = null;
   editor: React.RefObject<HTMLDivElement> = React.createRef();
+  outputRef: React.RefObject<HTMLPreElement> = React.createRef();
 
   running: boolean;
   mounted: boolean;
 
   constructor(props) {
     super(props);
-    this.state = { kind: "ready", output: [] };
+    this.state = {
+      kind: "ready",
+      output: [],
+      hidden: props.hideable === true,
+    };
 
     this.running = false;
     this.mounted = false;
-
-    if (props.hideable) {
-      // @ts-ignore
-      this.state.hidden = true;
-    } else {
-      // @ts-ignore
-      this.state.hidden = false;
-    }
 
     if (props.autoRun) {
       this.run(props.code);
@@ -114,7 +115,7 @@ class Cell extends React.Component<
           <div ref={this.editor}></div>
           {this.state.output.length > 0 ? (
             <div>
-              <pre className="snippet-output">
+              <pre ref={this.outputRef} className="snippet-output">
                 {this.state.output.map((output, i) => (
                   <div className={"output-" + output.type} key={i}>
                     {output.line}
@@ -183,6 +184,12 @@ class Cell extends React.Component<
     }
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.output.length > prevState.output.length) {
+      this.outputRef.current!.scrollTop = this.outputRef.current!.scrollHeight;
+    }
+  }
+
   async run(code) {
     if (this.running) return;
 
@@ -205,8 +212,9 @@ class Cell extends React.Component<
     // Run the code.
     await this.props.kernel.run(code, (line) => {
       this.setState((state) => {
-        state.output.push(line);
-        return state;
+        return {
+          output: [...state.output, line],
+        };
       });
     });
 
@@ -216,13 +224,10 @@ class Cell extends React.Component<
     // Mark as not running.
     this.running = false;
 
-    // Update the state.
-    this.setState((state) => {
-      state.kind = "re-runnable";
-      if (state.output.length === 0)
-        state.output.push({ type: "log", line: "Done." });
-      return state;
-    });
+    this.setState({ kind: "re-runnable" });
+    if (this.state.output.length === 0) {
+      this.setState({ output: [{ type: "log", line: "Done." }] });
+    }
   }
 }
 

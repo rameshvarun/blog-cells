@@ -18,5 +18,5 @@ export abstract class Kernel {
 
   getSyntaxHighlighter(): LanguageSupport | null {
     return null;
-  };
+  }
 }
