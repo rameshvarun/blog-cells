@@ -1,6 +1,6 @@
 {
   "name": "blog-cells",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "A tool for turning blog posts into interactive code notebooks.",
   "repository": {
     "type": "git",
