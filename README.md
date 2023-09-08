@@ -17,8 +17,8 @@ Just drop in JS / CSS imports and start creating code cells using `<script type=
 
 ```html
 <!-- Import blog-cells JS and CSS files. -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/blog-cells@0.7.0/dist/blog-cells.css" />
-<script src="https://cdn.jsdelivr.net/npm/blog-cells@0.7.0/dist/blog-cells.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/blog-cells@0.7.1/dist/blog-cells.css" />
+<script src="https://cdn.jsdelivr.net/npm/blog-cells@0.7.1/dist/blog-cells.js"></script>
 
 <!-- Create your code cells in script tags -->
 <script type="text/notebook-cell">
@@ -65,8 +65,8 @@ You can easily define and use your own custom kernels.
 
 ```html
 <!-- Import blog-cells JS and CSS files. -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/blog-cells@0.7.0/dist/blog-cells.css" />
-<script src="https://cdn.jsdelivr.net/npm/blog-cells@0.7.0/dist/blog-cells.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/blog-cells@0.7.1/dist/blog-cells.css" />
+<script src="https://cdn.jsdelivr.net/npm/blog-cells@0.7.1/dist/blog-cells.js"></script>
 
 <!-- Define custom kernel -->
 <script>
