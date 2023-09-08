@@ -1,16 +1,22 @@
-importScripts("https://cdn.jsdelivr.net/npm/pyodide@0.23.4/pyodide.min.js");
+importScripts("https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js");
 declare var loadPyodide;
 
 let onStdout: ((str) => void) | null = null;
 
 // Start loading Pyodide asynchronously.
 const loadPython = (async () => {
-  return await loadPyodide({
+  let pyodide = await loadPyodide({
     stdout: (msg) => {
       if (msg === "Python initialization complete") return;
       if (onStdout) onStdout(msg);
     },
   });
+
+  // Install micropip by default. Users can install
+  // additional packages using `micropip.install()`.
+  await pyodide.loadPackage("micropip");
+
+  return pyodide;
 })();
 
 self.onmessage = async (e: MessageEvent) => {
