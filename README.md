@@ -34,7 +34,7 @@ In addition to JavaScript, you can also embed code in other languages by adding 
 
 ```html
 <script type="text/notebook-cell" data-kernel="python">
-print("Hello World!");
+print("Hello World!")
 </script>
 ```
 
